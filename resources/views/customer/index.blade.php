@@ -1,11 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Status Barang') }}
+            {{ __('Customer') }}
         </h2>
         
         <div class="flex items-center gap-x-5">
-            <form action="{{ route('statusbarang.index') }}" method="GET" class="flex items-center max-w-sm mx-auto">   
+            <form action="{{ route('customer.index') }}" method="GET" class="flex items-center max-w-sm mx-auto">   
                 <label for="simple-search" class="sr-only">Search</label>
                 <div class="relative w-full">
                     <input type="text" id="simple-search" name="search" value="{{ request('search') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Cari..." required />
@@ -18,7 +18,7 @@
                 </button>
             </form>
     
-            <a href="{{ route('statusbarang.create') }}" class="text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-2xl text-sm w-full sm:w-auto py-2 px-3 text-center">Tambah Data</a>
+            <a href="{{ route('customer.create') }}" class="text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-2xl text-sm w-full sm:w-auto py-2 px-3 text-center">Tambah Data</a>
 
             <button id="delete-selected"
                 class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-2xl text-sm py-2 px-3 text-center hidden">
@@ -42,7 +42,16 @@
                                     No
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Status Barang
+                                    Nama
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Alamat
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    No Telp.
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Keterangan
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Aksi
@@ -63,13 +72,33 @@
                                             </div>
                                         </div>
                                     </td>
+                                    <th scope="row"
+                                        class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                        <div class="ps-0">
+                                            <div class="text-base font-semibold">{{ $d->nama }}</div>
+                                        </div>
+                                    </th>
                                     <td class="px-6 py-4">
-                                        <div class="text-base text-black gap-3 flex items-center"><span class="w-4 h-4 rounded-full border" style="background-color:{{ $d->warna }}"></span>{{ $d->nama }}</div>                                    </td>
+                                        <div class="text-base text-black">{{ $d->alamat }}</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-base text-black">{{ $d->telepon }}</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-base text-black">{{ $d->keterangan }}</div>
+                                    </td>
                                     <td class="px-6 py-4 flex gap-x-2">
-                                        <a href="/statusbarang/edit/{{ $d->id }}" type="button"
+                                        <a href="/customer/edit/{{ $d->id }}" type="button"
                                             class="flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Ubah</a>
 
-                                        <a href="/statusbarang/delete/{{ $d->id }}"
+                                        <button data-modal-target="main-modal" data-modal-toggle="main-modal"
+                                            class="!hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                            type="button"
+                                            onclick="openEditModal(edit=true, '{{ $d->id }}', '{{ $d->name }}', '{{ $d->address }}')">
+                                            Edit
+                                        </button>
+
+                                        <a href="/customer/delete/{{ $d->id }}"
                                             class="flex text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                             type="button">
                                             Hapus
@@ -113,7 +142,7 @@
 
                             if (selected.length > 0) {
                                 if (confirm('Apakah Anda yakin ingin menghapus data yang dipilih?')) {
-                                    fetch('/statusbarang/delete-selected', {
+                                    fetch('/customer/delete-selected', {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',

@@ -1,11 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Barang Masuk') }}
+            {{ __('Keperluan') }}
         </h2>
 
         <div class="flex items-center gap-x-5">
-            <form action="{{ route('barangmasuk.index') }}" method="GET" class="flex items-center max-w-sm mx-auto">
+            <form action="{{ route('keperluan.index') }}" method="GET" class="flex items-center max-w-sm mx-auto">
                 <label for="simple-search" class="sr-only">Search</label>
                 <div class="relative w-full">
                     <input type="text" id="simple-search" name="search" value="{{ request('search') }}"
@@ -23,7 +23,7 @@
                 </button>
             </form>
 
-            <a href="{{ route('barangmasuk.create') }}"
+            <a href="{{ route('keperluan.create') }}"
                 class="text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-2xl text-sm w-full sm:w-auto py-2 px-3 text-center">Tambah
                 Data</a>
 
@@ -45,45 +45,43 @@
                                 <th scope="col" class="px-6 py-3">
                                     <input type="checkbox" id="select-all">
                                 </th>
-                                <th scope="col" class="px-6 py-3">No</th>
-                                <th scope="col" class="px-6 py-3">Serial Number</th>
-                                <th scope="col" class="px-6 py-3">Barang</th>
-                                <th scope="col" class="px-6 py-3">Kondisi Barang</th>
-                                <th scope="col" class="px-6 py-3">Supplier</th>
-                                <th scope="col" class="px-6 py-3">Keterangan</th>
-                                <th scope="col" class="px-6 py-3">Tanggal Masuk</th>
-                                <th scope="col" class="px-6 py-3">Aksi</th>
+                                <th scope="col" class="px-6 py-3">
+                                    No
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Keperluan
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Aksi
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($data as $d)
-                                <tr class="bg-white border-b hover:bg-gray-50 text-base text-black">
+                                <tr class="bg-white border-b hover:bg-gray-50">
                                     <td class="w-4 px-6 py-4">
                                         <input type="checkbox" class="select-item flex justify-center items-center"
                                             value="{{ $d->id }}">
                                     </td>
-                                    <td class="px-6 py-4">{{ $loop->iteration }}</td>
-                                    <td class="px-6 py-4">{{ $d->serial_number }}</td>
-                                    <td class="px-6 py-4">{{ $d->nama_barang }}</td>
-                                    <td class="px-6 py-4"><b style="color:{{ $d->warna_status_barang }}">{{ $d->nama_status_barang }}</b></td>
-                                    <td class="px-6 py-4">{{ $d->nama_supplier }}</td>
-                                    <td class="px-6 py-4">{{ $d->keterangan }}</td>
-                                    <td class="px-6 py-4">{{ $d->tanggal }}</td>
+                                    <td class="w-4 p-4">
+                                        <div class="flex items-center">
+                                            <div class="ps-3 w-4 font-medium text-gray-900">
+                                                {{ $loop->iteration }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-base text-black gap-3 flex items-center">{{ $d->nama }}
+                                        </div>
+                                    </td>
                                     <td class="px-6 py-4 flex gap-x-2">
-                                        <a href="/barangmasuk/create/{{ $d->id }}"
-                                            class="flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center"
+                                        <a href="/keperluan/edit/{{ $d->id }}" type="button"
+                                            class="flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Ubah</a>
+
+                                        <a href="/keperluan/delete/{{ $d->id }}"
+                                            class="flex text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                             type="button">
-                                            <svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' stroke="white" stroke-width="2" fill="none" width="18" height="18"><g transform='translate(2.300000, 2.300000)'><line x1='9.73684179' y1='6.162632' x2='9.73684179' y2='13.3110531'></line><line x1='13.3146315' y1='9.73684179' x2='6.158842' y2='9.73684179'></line><path d='M-3.55271368e-14,9.73684211 C-3.55271368e-14,2.43473684 2.43473684,2.13162821e-14 9.73684211,2.13162821e-14 C17.0389474,2.13162821e-14 19.4736842,2.43473684 19.4736842,9.73684211 C19.4736842,17.0389474 17.0389474,19.4736842 9.73684211,19.4736842 C2.43473684,19.4736842 -3.55271368e-14,17.0389474 -3.55271368e-14,9.73684211 Z'></path></g></svg>
-                                        </a>
-                                        {{-- <a href="/barangmasuk/edit/{{ $d->id }}"
-                                            class="flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center"
-                                            type="button">
-                                            <svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' stroke="white" stroke-width="2" fill="none" width="18" height="18"><g transform='translate(2.000000, 2.000000)'><path d='M10.0002,0.7501 C3.0632,0.7501 0.7502,3.0631 0.7502,10.0001 C0.7502,16.9371 3.0632,19.2501 10.0002,19.2501 C16.9372,19.2501 19.2502,16.9371 19.2502,10.0001'></path><path d='M17.5285,2.3038 L17.5285,2.3038 C16.5355,1.4248 15.0185,1.5168 14.1395,2.5098 C14.1395,2.5098 9.7705,7.4448 8.2555,9.1578 C6.7385,10.8698 7.8505,13.2348 7.8505,13.2348 C7.8505,13.2348 10.3545,14.0278 11.8485,12.3398 C13.3435,10.6518 17.7345,5.6928 17.7345,5.6928 C18.6135,4.6998 18.5205,3.1828 17.5285,2.3038 Z'></path><line x1='13.009' y1='3.8008' x2='16.604' y2='6.9838'></line></g></svg>
-                                        </a> --}}
-                                        <a href="/barangmasuk/delete/{{ $d->id }}"
-                                            class="flex text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center"
-                                            type="button">
-                                            <svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' stroke="white" stroke-width="2" fill="none" width="18" height="18"><g transform='translate(3.500000, 2.000000)'><path d='M15.3891429,7.55409524 C15.3891429,15.5731429 16.5434286,19.1979048 8.77961905,19.1979048 C1.01485714,19.1979048 2.19295238,15.5731429 2.19295238,7.55409524'></path><line x1='16.8651429' y1='4.47980952' x2='0.714666667' y2='4.47980952'></line><path d='M12.2148571,4.47980952 C12.2148571,4.47980952 12.7434286,0.714095238 8.78914286,0.714095238 C4.83580952,0.714095238 5.36438095,4.47980952 5.36438095,4.47980952'></path></g></svg>
+                                            Hapus
                                         </a>
                                     </td>
                                 </tr>
@@ -124,7 +122,7 @@
 
                             if (selected.length > 0) {
                                 if (confirm('Apakah Anda yakin ingin menghapus data yang dipilih?')) {
-                                    fetch('/barangmasuk/delete-selected', {
+                                    fetch('/keperluan/delete-selected', {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',

@@ -21,7 +21,7 @@ class PermintaanBarangKeluarController extends Controller
         ->leftJoin('supplier', 'barang_masuk.supplier_id', '=', 'supplier.id')
         ->leftJoin('barang', 'barang_masuk.barang_id', '=', 'barang.id')
         ->leftJoin('status_barang', 'barang_masuk.status_barang_id', '=', 'status_barang.id')
-        ->select('barang_masuk.*', 'supplier.nama as nama_supplier', 'barang.nama as nama_barang', 'status_barang.nama as nama_status_barang')
+        ->select('barang_masuk.*', 'supplier.nama as nama_supplier', 'barang.nama as nama_barang', 'status_barang.nama as nama_status_barang', 'status_barang.warna as warna_status_barang')
         ->selectRaw("DATE_FORMAT(barang_masuk.tanggal, '%d %M %Y') as formatted_tanggal")
         ->when($search, function ($query) use ($search) {
             return $query->where('barang_masuk.barang_id', 'like', '%' . $search . '%')
@@ -30,6 +30,7 @@ class PermintaanBarangKeluarController extends Controller
                 ->orWhere('status_barang.nama', 'like', '%' . $search . '%')
                 ->orWhere('barang_masuk.serial_number', 'like', '%' . $search . '%');
         })
+        ->orderBy('barang_masuk.tanggal', 'asc')
         ->paginate(7);
 
 		$data->getCollection()->transform(function ($item) {

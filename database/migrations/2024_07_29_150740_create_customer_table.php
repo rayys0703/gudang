@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('status_barang', function (Blueprint $table) {
-            $table->id();
+        Schema::create('customer', function (Blueprint $table) {
+            $table->bigIncrements('id')->unique()->unsigned();
             $table->string('nama');
-            $table->string('warna')->default('#000000');
+            $table->string('alamat')->nullable();
+            $table->string('telepon')->nullable();
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('status_barang');
+        Schema::dropIfExists('customer');
     }
 };

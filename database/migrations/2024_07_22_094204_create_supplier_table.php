@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('supplier', function (Blueprint $table) {
             $table->bigIncrements('id')->unique()->unsigned();
             $table->string('nama');
-            //$table->enum('bank', ['DANA','GoPay','BRI','BCA','BNI','Mandiri'])->nullable();
             $table->string('alamat')->nullable();
             $table->string('telepon')->nullable();
             $table->string('keterangan')->nullable();

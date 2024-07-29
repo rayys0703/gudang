@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Barang Masuk') }}
+            {{ __('Permintaan Barang Keluar') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <form class="" method="post" action="{{ route('barangmasuk.store') }}" enctype="multipart/form-data">
+                <form class="" method="post" action="{{ route('permintaanbarangkeluar.store') }}" enctype="multipart/form-data">
                     @csrf
                     @if ($errors->any())
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-3" role="alert">

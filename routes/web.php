@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\JenisBarangController;
 use App\Http\Controllers\StatusBarangController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\BarangMasukController;
 use App\Http\Controllers\PermintaanBarangKeluarController;
+use App\Http\Controllers\KeperluanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -30,6 +32,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/supplier/delete/{id}', [SupplierController::class, 'delete'])->name('supplier.delete');
     Route::get('/supplier/getUserDataByName/{name}', [SupplierController::class, 'getUserDataByName']);
     Route::post('/supplier/delete-selected', [SupplierController::class, 'deleteSelected']);
+
+    Route::get('/customer', [CustomerController::class, 'index'])->name('customer.index');
+    Route::get('/customer/create', [CustomerController::class, 'create'])->name('customer.create');
+    Route::post('/customer/store', [CustomerController::class, 'store'])->name('customer.store');
+    Route::get('/customer/edit/{id}', [CustomerController::class, 'edit'])->name('customer.edit');
+    Route::put('/customer/update/{id}', [CustomerController::class, 'update'])->name('customer.update');
+    Route::get('/customer/delete/{id}', [CustomerController::class, 'delete'])->name('customer.delete');
+    Route::get('/customer/getUserDataByName/{name}', [CustomerController::class, 'getUserDataByName']);
+    Route::post('/customer/delete-selected', [CustomerController::class, 'deleteSelected']);
 
     Route::get('/jenisbarang', [JenisBarangController::class, 'index'])->name('jenisbarang.index');
     Route::get('/jenisbarang/create', [JenisBarangController::class, 'create'])->name('jenisbarang.create');
@@ -56,9 +67,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/barang/delete-selected', [BarangController::class, 'deleteSelected']);
 
     Route::get('/barangmasuk', [BarangMasukController::class, 'index'])->name('barangmasuk.index');
-    Route::get('/barangmasuk/create', [BarangMasukController::class, 'create'])->name('barangmasuk.create');
+    Route::get('/barangmasuk/create/{id?}', [BarangMasukController::class, 'create'])->name('barangmasuk.create');
     Route::get('/barangmasuk/get-by-jenis/{id}', [BarangMasukController::class, 'getBarangByJenis']);
-    Route::get('/barangmasuk/createSelected/{id}', [BarangMasukController::class, 'createSelected'])->name('barangmasuk.createSelected');
     Route::post('/barangmasuk/store', [BarangMasukController::class, 'store'])->name('barangmasuk.store');
     //Route::get('/barangmasuk/edit/{id}', [BarangMasukController::class, 'edit'])->name('barangmasuk.edit');
     Route::put('/barangmasuk/update/{id}', [BarangMasukController::class, 'update'])->name('barangmasuk.update');
@@ -71,6 +81,14 @@ Route::middleware('auth')->group(function () {
     //Route::get('/permintaanbarangkeluar/edit/{id}', [PermintaanBarangKeluarController::class, 'edit'])->name('permintaanbarangkeluar.edit');
     Route::put('/permintaanbarangkeluar/update/{id}', [PermintaanBarangKeluarController::class, 'update'])->name('permintaanbarangkeluar.update');
     Route::get('/permintaanbarangkeluar/delete/{id}', [PermintaanBarangKeluarController::class, 'delete'])->name('permintaanbarangkeluar.delete');
+
+    Route::get('/keperluan', [KeperluanController::class, 'index'])->name('keperluan.index');
+    Route::get('/keperluan/create', [KeperluanController::class, 'create'])->name('keperluan.create');
+    Route::post('/keperluan/store', [KeperluanController::class, 'store'])->name('keperluan.store');
+    Route::get('/keperluan/edit/{id}', [KeperluanController::class, 'edit'])->name('keperluan.edit');
+    Route::put('/keperluan/update/{id}', [KeperluanController::class, 'update'])->name('keperluan.update');
+    Route::get('/keperluan/delete/{id}', [KeperluanController::class, 'delete'])->name('keperluan.delete');
+    Route::post('/keperluan/delete-selected', [KeperluanController::class, 'deleteSelected']);
 });
 
 require __DIR__.'/auth.php';

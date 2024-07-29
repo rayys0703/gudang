@@ -41,6 +41,19 @@ class DatabaseSeeder extends Seeder
         DB::table('supplier')->insert($supplier);
 
         ///
+
+        $customer = [];
+        for ($i = 0; $i < 10; $i++) {
+            $customer[] = [
+                'nama' => $faker->company,
+                'alamat' => $faker->address,
+                'telepon' => $faker->phoneNumber,
+            ];
+        }
+
+        DB::table('customer')->insert($customer);
+
+        ///
         
         $jenisbarang = [
             [
@@ -64,13 +77,28 @@ class DatabaseSeeder extends Seeder
         $statusbarang = [
             [
                 'nama' => 'Baik',
+                'warna' => '#00FF00'
             ],
             [
                 'nama' => 'Rusak',
+                'warna' => '#FF0000'
             ],
         ];
 
         DB::table('status_barang')->insert($statusbarang);
+
+        ///
+
+        $keperluan = [
+            [
+                'nama' => 'Untuk Dipinjam',
+            ],
+            [
+                'nama' => 'Untuk Dipasang',
+            ],
+        ];
+
+        DB::table('keperluan')->insert($keperluan);
 
         ///
         

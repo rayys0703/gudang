@@ -4,87 +4,77 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use App\Models\StatusBarang;
+use App\Models\Keperluan;
 use App\Models\BarangMasuk;
 use App\Models\Barang;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class StatusBarangController extends Controller
+class KeperluanController extends Controller
 {
 
 	public function index(Request $request)
 	{
 		$search = $request->input('search');
 
-        $data = StatusBarang::when($search, function ($query) use ($search) {
+        $data = Keperluan::when($search, function ($query) use ($search) {
             return $query->where('nama', 'like', '%' . $search . '%');
         })->paginate(7);
 
-        return view('statusbarang.index', compact('data'));
+        return view('keperluan.index', compact('data'));
 	}
 
 	public function create()
 	{
-		return view('statusbarang.create');
+		return view('keperluan.create');
 	}
 
 	public function store(Request $request): RedirectResponse
 	{
 		$request->validate([
 			'nama' => 'required|string|max:255',
-			'warna' => 'required|string|regex:/^#[A-Fa-f0-9]{6}$/',
 		], [
 			'nama.required' => 'Nama jenis barang harus diisi.',
 			'nama.string' => 'Nama jenis barang harus berupa teks.',
 			'nama.max' => 'Nama jenis barang tidak boleh lebih dari 255 karakter.',
-			'warna.required' => 'Warna harus diisi.',
-			'warna.string' => 'Warna harus berupa teks.',
-			'warna.regex' => 'Format warna tidak valid. Gunakan format hex (contoh: #FFFFFF).',
 		]);
 
-		$data = StatusBarang::create([
+		$data = Keperluan::create([
 			'nama' => $request->nama,
-			'warna' => $request->warna,
 		]);
 
-		return redirect('/statusbarang')->with('success', 'Anda berhasil menambahkan data!');
+		return redirect('/keperluan')->with('success', 'Anda berhasil menambahkan data!');
 	}
 
 	public function edit($id)
 	{
-		$data = StatusBarang::find($id);
-		return view('statusbarang.edit', ['data' => $data]);
+		$data = Keperluan::find($id);
+		return view('keperluan.edit', ['data' => $data]);
 	}
 
 	public function update($id, Request $request): RedirectResponse
 	{
 		$request->validate([
 			'nama' => 'required|string|max:255',
-			'warna' => 'required|string|regex:/^#[A-Fa-f0-9]{6}$/',
 		], [
 			'nama.required' => 'Nama jenis barang harus diisi.',
 			'nama.string' => 'Nama jenis barang harus berupa teks.',
 			'nama.max' => 'Nama jenis barang tidak boleh lebih dari 255 karakter.',
-			'warna.required' => 'Warna harus diisi.',
-			'warna.string' => 'Warna harus berupa teks.',
-			'warna.regex' => 'Format warna tidak valid. Gunakan format hex (contoh: #FFFFFF).',
 		]);
 
-		$data = StatusBarang::find($id);
+		$data = Keperluan::find($id);
 
 		$data->nama = $request->nama;
-		$data->warna = $request->warna;
 		$data->save();
 
-		return redirect('/statusbarang')->with('success', 'Anda berhasil memperbarui data!');
+		return redirect('/keperluan')->with('success', 'Anda berhasil memperbarui data!');
 	}
 
 	public function delete($id)
 	{
-		$statusBarang = StatusBarang::find($id);
-		$barangMasuk = BarangMasuk::where('status_barang_id', $id)->get();
+		$keperluan = Keperluan::find($id);
+		/*$barangMasuk = BarangMasuk::where('status_barang_id', $id)->get();
 
 		foreach ($barangMasuk as $item) {
 			$barang = Barang::find($item->barang_id);
@@ -93,18 +83,18 @@ class StatusBarangController extends Controller
 				$barang->save();
 			}
 			$item->delete();
-		}
+		}*/
 
-		$statusBarang->delete();
-		return redirect('/statusbarang')->with('success', 'Anda berhasil menghapus data!');
+		$keperluan->delete();
+		return redirect('/keperluan')->with('success', 'Anda berhasil menghapus data!');
 	}
 
 	public function deleteSelected(Request $request)
 	{
 		$ids = $request->input('ids');
 		foreach ($ids as $id) {
-			$statusBarang = StatusBarang::find($id);
-			$barangMasuk = BarangMasuk::where('status_barang_id', $id)->get();
+			$keperluan = Keperluan::find($id);
+			/*$barangMasuk = BarangMasuk::where('status_barang_id', $id)->get();
 
 			foreach ($barangMasuk as $item) {
 				$barang = Barang::find($item->barang_id);
@@ -113,9 +103,9 @@ class StatusBarangController extends Controller
 					$barang->save();
 				}
 				$item->delete();
-			}
+			}*/
 
-			$statusBarang->delete();
+			$keperluan->delete();
 		}
 		return response()->json(['success' => 'Data berhasil dihapus']);
 	}

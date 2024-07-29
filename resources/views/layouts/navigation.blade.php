@@ -12,11 +12,14 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    {{-- <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
-                    </x-nav-link>
+                    </x-nav-link> --}}
                     <x-nav-link :href="route('supplier.index')" :active="request()->routeIs('supplier.*')">
                         {{ __('Supplier') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('customer.index')" :active="request()->routeIs('customer.*')">
+                        {{ __('Customer') }}
                     </x-nav-link>
                     <x-nav-link :href="route('jenisbarang.index')" :active="request()->routeIs('jenisbarang.*')">
                         {{ __('Jenis Barang') }}
@@ -30,8 +33,11 @@
                     <x-nav-link :href="route('barangmasuk.index')" :active="request()->routeIs('barangmasuk.*')">
                         {{ __('Barang Masuk') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('keperluan.index')" :active="request()->routeIs('keperluan.*')">
+                        {{ __('Keperluan') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('permintaanbarangkeluar.index')" :active="request()->routeIs('permintaanbarangkeluar.*')">
-                        {{ __('Permintaan Barang Keluar') }}
+                        {{ __('Perm. Barang Keluar') }}
                     </x-nav-link>
                 </div>
             </div>

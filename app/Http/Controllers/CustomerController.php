@@ -4,33 +4,33 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use App\Models\Supplier;
+use App\Models\Customer;
 use App\Models\Barang;
 use App\Models\BarangMasuk;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class SupplierController extends Controller
+class CustomerController extends Controller
 {
 
 	public function index(Request $request)
 	{
 		$search = $request->input('search');
 
-        $data = Supplier::when($search, function ($query) use ($search) {
+        $data = Customer::when($search, function ($query) use ($search) {
             return $query->where('nama', 'like', '%' . $search . '%')
 			->orWhere('alamat', 'like', '%' . $search . '%')
 			->orWhere('telepon', 'like', '%' . $search . '%')
 			->orWhere('keterangan', 'like', '%' . $search . '%');
         })->orderBy('nama', 'asc')->paginate(7);	
 					
-        return view('supplier.index', compact('data'));
+        return view('customer.index', compact('data'));
 	}
 
 	public function create()
 	{
-		return view('supplier.create');
+		return view('customer.create');
 	}
 
 	public function store(Request $request): RedirectResponse
@@ -56,20 +56,20 @@ class SupplierController extends Controller
 
 		//$userId = Auth::id();
 
-		$data = Supplier::create([
+		$data = Customer::create([
 			'nama' => $request->nama,
 			'alamat' => $request->alamat,
 			'telepon' => $request->telepon,
 			'keterangan' => $request->keterangan,
 		]);
 
-		return redirect('/supplier')->with('success', 'Anda berhasil menambahkan data!');
+		return redirect('/customer')->with('success', 'Anda berhasil menambahkan data!');
 	}
 
 	public function edit($id)
 	{
-		$data = Supplier::find($id);
-		return view('supplier.edit', ['data' => $data]);
+		$data = Customer::find($id);
+		return view('customer.edit', ['data' => $data]);
 	}
 
 	public function update($id, Request $request): RedirectResponse
@@ -93,7 +93,7 @@ class SupplierController extends Controller
 			'keterangan.max' => 'Keterangan tidak boleh lebih dari 255 karakter.',
 		]);
 
-		$data = Supplier::find($id);
+		$data = Customer::find($id);
 
 		$data->nama = $request->nama;
 		$data->alamat = $request->alamat;
@@ -101,14 +101,14 @@ class SupplierController extends Controller
 		$data->keterangan = $request->keterangan;
 		$data->save();
 
-		return redirect('/supplier')->with('success', 'Anda berhasil memperbarui data!');
+		return redirect('/customer')->with('success', 'Anda berhasil memperbarui data!');
 	}
 
 	public function delete($id)
 	{
-		$supplier = Supplier::find($id);
+		$customer = Customer::find($id);
 
-		$barangMasuk = BarangMasuk::where('supplier_id', $id)->get();
+		/*$barangMasuk = BarangMasuk::where('customer_id', $id)->get();
 
 		foreach ($barangMasuk as $item) {
 			$barang = Barang::find($item->barang_id);
@@ -117,20 +117,20 @@ class SupplierController extends Controller
 				$barang->save();
 			}
 			$item->delete();
-		}
+		}*/
 
-		$supplier->delete();
-		return redirect('/supplier')->with('success', 'Anda berhasil menghapus data!');
+		$customer->delete();
+		return redirect('/customer')->with('success', 'Anda berhasil menghapus data!');
 	}
 
 	public function deleteSelected(Request $request)
 	{
 		$ids = $request->input('ids');
 		foreach ($ids as $id) {
-			$supplier = Supplier::find($id);
+			$customer = Customer::find($id);
 
-			if ($supplier) {
-				$barangMasuk = BarangMasuk::where('supplier_id', $id)->get();
+			if ($customer) {
+				/*$barangMasuk = BarangMasuk::where('customer_id', $id)->get();
 
 				foreach ($barangMasuk as $item) {
 					$barang = Barang::find($item->barang_id);
@@ -139,11 +139,11 @@ class SupplierController extends Controller
 						$barang->save();
 					}
 					$item->delete();
-				}
+				}*/
 
-				$supplier->delete();
+				$customer->delete();
 			}
 		}
-		return redirect('/supplier')->with('success', 'Anda berhasil menghapus data terpilih!');
+		return redirect('/customer')->with('success', 'Anda berhasil menghapus data terpilih!');
 	}
 }

@@ -21,7 +21,7 @@ class BarangMasukController extends Controller
         ->leftJoin('supplier', 'barang_masuk.supplier_id', '=', 'supplier.id')
         ->leftJoin('barang', 'barang_masuk.barang_id', '=', 'barang.id')
         ->leftJoin('status_barang', 'barang_masuk.status_barang_id', '=', 'status_barang.id')
-        ->select('barang_masuk.*', 'supplier.nama as nama_supplier', 'barang.nama as nama_barang', 'status_barang.nama as nama_status_barang')
+        ->select('barang_masuk.*', 'supplier.nama as nama_supplier', 'barang.nama as nama_barang', 'status_barang.nama as nama_status_barang', 'status_barang.warna as warna_status_barang')
         ->selectRaw("DATE_FORMAT(barang_masuk.tanggal, '%d %M %Y') as formatted_tanggal")
         ->when($search, function ($query) use ($search) {
             return $query->where('barang_masuk.barang_id', 'like', '%' . $search . '%')
@@ -30,6 +30,7 @@ class BarangMasukController extends Controller
                 ->orWhere('status_barang.nama', 'like', '%' . $search . '%')
                 ->orWhere('barang_masuk.serial_number', 'like', '%' . $search . '%');
         })
+        ->orderBy('barang_masuk.tanggal', 'asc')
         ->paginate(7);
 
 		$data->getCollection()->transform(function ($item) {
@@ -40,11 +41,24 @@ class BarangMasukController extends Controller
         return view('barangmasuk.index', compact('data'));
 	}
 
-	public function create()
+	public function create($id = null)
 	{
-		$supplier = DB::table('supplier')->select('id', 'nama')->orderBy('nama', 'asc')->get();
-		$barang = DB::table('barang')->select('id', 'nama')->orderBy('nama', 'asc')->get();
+		$barangMasuk = null;
+		$jenis_barang_id = null;
+		$barangbyjenis = null;
 		$jenis_barang = DB::table('jenis_barang')->select('id', 'nama')->orderBy('nama', 'asc')->get();
+		$barang = DB::table('barang')->select('id', 'nama')->orderBy('nama', 'asc')->get();
+
+		if ($id !== null) {
+			$barangMasuk = DB::table('barang_masuk')->where('id', $id)->first();
+			$jenis_barang_id = DB::table('barang')
+				->join('jenis_barang', 'barang.jenis_barang_id', '=', 'jenis_barang.id')
+				->where('barang.id', $barangMasuk->barang_id)
+				->value('jenis_barang.id');
+			$barangbyjenis = DB::table('barang')->where('jenis_barang_id', $jenis_barang_id)->orderBy('nama', 'asc')->get();
+		}
+		
+		$supplier = DB::table('supplier')->select('id', 'nama')->orderBy('nama', 'asc')->get();
 		$status_barang = DB::table('status_barang')->select('id', 'nama')->orderBy('nama', 'asc')->get();
 
 		$bm_kode = DB::table('barang_masuk')->orderBy('id', 'desc')->value('bm_kode');
@@ -57,7 +71,7 @@ class BarangMasukController extends Controller
 			$bm_kode_value = 'BM_' . str_pad(1, 3, '0', STR_PAD_LEFT);
 		}
 
-		return view('barangmasuk.create', compact('supplier','barang','jenis_barang','status_barang','bm_kode_value'));
+		return view('barangmasuk.create', compact('barangMasuk', 'supplier', 'barang', 'barangbyjenis', 'jenis_barang', 'jenis_barang_id', 'status_barang', 'bm_kode_value'));
 	}
 
 	public function getBarangByJenis($id)
@@ -66,7 +80,7 @@ class BarangMasukController extends Controller
 		return response()->json($barang);
 	}
 
-	public function createSelected($id)
+	/*public function createSelected($id)
 	{
 		$barangMasuk = BarangMasuk::findOrFail($id);
 
@@ -86,7 +100,7 @@ class BarangMasukController extends Controller
 		}
 
 		return view('barangmasuk.create', compact('barangMasuk', 'supplier', 'barang', 'jenis_barang', 'status_barang', 'bm_kode_value'));
-	}
+	}*/
 
 	public function store(Request $request): RedirectResponse
 	{
