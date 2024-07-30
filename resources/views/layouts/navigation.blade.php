@@ -34,7 +34,7 @@
                         {{ __('Barang Masuk') }}
                     </x-nav-link>
                     <x-nav-link :href="route('keperluan.index')" :active="request()->routeIs('keperluan.*')">
-                        {{ __('Keperluan') }}
+                        {{ __('Jenis Keperluan') }}
                     </x-nav-link>
                     <x-nav-link :href="route('permintaanbarangkeluar.index')" :active="request()->routeIs('permintaanbarangkeluar.*')">
                         {{ __('Perm. Barang Keluar') }}

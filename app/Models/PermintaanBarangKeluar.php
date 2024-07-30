@@ -14,7 +14,7 @@ class PermintaanBarangKeluar extends Model
     protected $fillable = [
         'barangmasuk_id',
         'customer_id',
-        'keperluan',
+        'keperluan_id',
         'tanggal',
         'catatan',
         'status'
