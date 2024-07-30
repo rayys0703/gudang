@@ -31,12 +31,11 @@ Sistem Inventaris Gudang - Barang Masuk dan Barang Keluar
   
 ## Installation 
 
-You can fork or clone this project
-
 ```
 composer install or composer update
-cp .env.example .env <-- edit database
+cp .env.example .env
 php artisan key:generate
+php artisan migrate --seed
 php artisan serve --host=0.0.0.0 --port=8000
 
 npm install
