@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('keperluan_id');
             $table->string('keterangan')->nullable();
             $table->date('tanggal');
-            $table->enum('status', ['Belum Disetujui', 'Disetujui', 'Tidak Disetujui'])->default('Belum Disetujui');
+            $table->enum('status', ['Belum Disetujui', 'Disetujui', 'Ditolak'])->default('Belum Disetujui');
             $table->timestamps();
 
             $table->foreign('barangmasuk_id')->references('id')->on('barang_masuk')->onDelete('cascade')->onUpdate('cascade');

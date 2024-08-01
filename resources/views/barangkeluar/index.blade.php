@@ -1,12 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Permintaan Barang Keluar') }}
+            {{ __('Barang Keluar') }}
         </h2>
 
         <div class="flex items-center gap-x-5">
-            <form action="{{ route('permintaanbarangkeluar.index') }}" method="GET"
-                class="flex items-center max-w-sm mx-auto">
+            <form action="{{ route('barangkeluar.index') }}" method="GET" class="flex items-center max-w-sm mx-auto">
                 <label for="simple-search" class="sr-only">Search</label>
                 <div class="relative w-full">
                     <input type="text" id="simple-search" name="search" value="{{ request('search') }}"
@@ -24,13 +23,14 @@
                 </button>
             </form>
 
-            <a href="{{ route('permintaanbarangkeluar.create') }}"
-                class="text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-2xl text-sm w-full sm:w-auto py-2 px-3 text-center">Buat Permintaan</a>
+            {{-- <a href="{{ route('barangkeluar.create') }}"
+                class="text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-2xl text-sm w-full sm:w-auto py-2 px-3 text-center">Tambah
+                Data</a>
 
             <button id="delete-selected"
                 class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-2xl text-sm py-2 px-3 text-center hidden">
                 Hapus Terpilih
-            </button>
+            </button> --}}
         </div>
 
     </x-slot>
@@ -52,7 +52,6 @@
                                 <th scope="col" class="px-6 py-3">Keperluan</th>
                                 {{-- <th scope="col" class="px-6 py-3">Keterangan</th> --}}
                                 <th scope="col" class="px-6 py-3">Tanggal</th>
-                                <th scope="col" class="px-6 py-3">Status</th>
                                 <th scope="col" class="px-6 py-3">Aksi</th>
                             </tr>
                         </thead>
@@ -70,17 +69,6 @@
                                     <td class="px-6 py-4">{{ $d->nama_keperluan }}</td>
                                     {{-- <td class="px-6 py-4">{{ $d->keterangan }}</td> --}}
                                     <td class="px-6 py-4">{{ $d->tanggal }}</td>
-                                    <td class="px-6 py-4">
-                                        @if ($d->status == 'Ditolak')
-                                            <span class="text-red-600">{{ $d->status }}</span>
-                                        @elseif ($d->status == 'Belum Disetujui')
-                                            <span class="text-yellow-600">{{ $d->status }}</span>
-                                        @elseif ($d->status == 'Disetujui')
-                                            <span class="text-green-600">{{ $d->status }}</span>
-                                        @else
-                                            {{ $d->status }}
-                                        @endif
-                                    </td>
                                     <td class="px-6 py-4 flex gap-x-2">
 
                                         <button type="button"
@@ -104,29 +92,7 @@
                                             </svg>
                                         </button>
 
-                                        {{-- @if ($d->status == 'Belum Disetujui')
-                                            <button onclick="showStatusChangeAlert({{ $d->id }})"
-                                                class="flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center"
-                                                type="button">
-                                                <svg class='line' xmlns='http://www.w3.org/2000/svg'
-                                                    viewBox='0 0 24 24' stroke="white" stroke-width="2" fill="none"
-                                                    width="18" height="18">
-                                                    <g transform='translate(2.000000, 2.000000)'>
-                                                        <path
-                                                            d='M10.0002,0.7501 C3.0632,0.7501 0.7502,3.0631 0.7502,10.0001 C0.7502,16.9371 3.0632,19.2501 10.0002,19.2501 C16.9372,19.2501 19.2502,16.9371 19.2502,10.0001'>
-                                                        </path>
-                                                        <path
-                                                            d='M17.5285,2.3038 L17.5285,2.3038 C16.5355,1.4248 15.0185,1.5168 14.1395,2.5098 C14.1395,2.5098 9.7705,7.4448 8.2555,9.1578 C6.7385,10.8698 7.8505,13.2348 7.8505,13.2348 C7.8505,13.2348 10.3545,14.0278 11.8485,12.3398 C13.3435,10.6518 17.7345,5.6928 17.7345,5.6928 C18.6135,4.6998 18.5205,3.1828 17.5285,2.3038 Z'>
-                                                        </path>
-                                                        <line x1='13.009' y1='3.8008' x2='16.604'
-                                                            y2='6.9838'>
-                                                        </line>
-                                                    </g>
-                                                </svg>
-                                            </button>
-                                        @endif --}}
-
-                                        <a href="/permintaanbarangkeluar/delete/{{ $d->id }}"
+                                        <a href="/barangkeluar/delete/{{ $d->id }}"
                                             class="!hidden text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center"
                                             type="button">
                                             <svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'
@@ -154,7 +120,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="detailModalLabel{{ $d->id }}">
-                                                    Detail Permintaan Barang</h5>
+                                                    Detail Barang Keluar</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
@@ -172,33 +138,13 @@
                                                     <div class="col-span-7">{{ $d->nama_customer }}</div>
                                                     <div class="font-bold col-span-3">Keperluan:</div>
                                                     <div class="col-span-7">{{ $d->nama_keperluan }}</div>
-                                                    <div class="font-bold col-span-3">Keterangan:</div>
-                                                    <div class="col-span-7">{{ $d->keterangan }}</div>
                                                     <div class="font-bold col-span-3">Tanggal:</div>
                                                     <div class="col-span-7">{{ $d->tanggal }}</div>
-                                                    <div class="font-bold col-span-3">Status:</div>
-                                                    <div class="col-span-7">
-                                                        @if ($d->status == 'Ditolak')
-                                                            <span class="text-red-600">{{ $d->status }}</span>
-                                                        @elseif ($d->status == 'Belum Disetujui')
-                                                            <span class="text-yellow-600">{{ $d->status }}</span>
-                                                        @elseif ($d->status == 'Disetujui')
-                                                            <span class="text-green-600">{{ $d->status }}</span>
-                                                        @else
-                                                            {{ $d->status }}
-                                                        @endif
-                                                    </div>
+                                                    {{-- <div class="font-bold col-span-3">Keterangan:</div>
+                                                    <div class="col-span-7">{{ $d->keterangan }}</div> --}}
                                                 </div>
                                             </div>
                                             <div class="modal-footer gap-x-3">
-                                                @if ($d->status == 'Belum Disetujui')
-                                                    <button type="button" class="btn btn-success"
-                                                        onclick="updateStatus({{ $d->id }}, 'Disetujui')"
-                                                        data-bs-dismiss="modal">Setujui</button>
-                                                    <button type="button" class="btn btn-danger"
-                                                        onclick="updateStatus({{ $d->id }}, 'Ditolak')"
-                                                        data-bs-dismiss="modal">Tolak</button>
-                                                @endif
                                                 <button type="button" class="!hidden btn btn-secondary"
                                                     data-bs-dismiss="modal">Tutup</button>
                                             </div>
@@ -208,53 +154,6 @@
                             @endforeach
                         </tbody>
 
-                        <script>
-                            /*function showStatusChangeAlert(id) {
-                                                                                                        Swal.fire({
-                                                                                                            title: 'Ubah Status',
-                                                                                                            text: "Pilih status untuk permintaan barang ini:",
-                                                                                                            icon: 'warning',
-                                                                                                            showCancelButton: true,
-                                                                                                            showDenyButton: true,
-                                                                                                            confirmButtonColor: '#3085d6',
-                                                                                                            cancelButtonColor: '#808080',
-                                                                                                            denyButtonColor: '#d33',
-                                                                                                            confirmButtonText: 'Setujui',
-                                                                                                            denyButtonText: 'Tolak',
-                                                                                                            cancelButtonText: 'Batal'
-                                                                                                        }).then((result) => {
-                                                                                                            if (result.isConfirmed) {
-                                                                                                                updateStatus(id, 'Disetujui');
-                                                                                                            } else if (result.isDenied) {
-                                                                                                                updateStatus(id, 'Ditolak');
-                                                                                                            }
-                                                                                                        });
-                                                                                                    }*/
-
-                            function updateStatus(id, status) {
-                                fetch('/permintaanbarangkeluar/update-status', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                        },
-                                        body: JSON.stringify({
-                                            id: id,
-                                            status: status
-                                        })
-                                    })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        if (data.success) {
-                                            Swal.fire('Berhasil!', data.message, 'success').then(() => {
-                                                location.reload();
-                                            });
-                                        } else {
-                                            Swal.fire('Gagal!', data.message, 'error');
-                                        }
-                                    });
-                            }
-                        </script>
                     </table>
 
                     <script>
@@ -290,7 +189,7 @@
 
                             if (selected.length > 0) {
                                 if (confirm('Apakah Anda yakin ingin menghapus data yang dipilih?')) {
-                                    fetch('/permintaanbarangkeluar/delete-selected', {
+                                    fetch('/barangkeluar/delete-selected', {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',

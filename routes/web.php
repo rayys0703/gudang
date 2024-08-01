@@ -8,7 +8,9 @@ use App\Http\Controllers\StatusBarangController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\BarangMasukController;
 use App\Http\Controllers\PermintaanBarangKeluarController;
+use App\Http\Controllers\BarangKeluarController;
 use App\Http\Controllers\KeperluanController;
+use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -85,6 +87,14 @@ Route::middleware('auth')->group(function () {
     Route::put('/permintaanbarangkeluar/update/{id}', [PermintaanBarangKeluarController::class, 'update'])->name('permintaanbarangkeluar.update');
     Route::get('/permintaanbarangkeluar/delete/{id}', [PermintaanBarangKeluarController::class, 'delete'])->name('permintaanbarangkeluar.delete');
 
+    Route::get('/barangkeluar', [BarangKeluarController::class, 'index'])->name('barangkeluar.index');
+    Route::get('/barangkeluar/create/{id?}', [BarangKeluarController::class, 'create'])->name('barangkeluar.create');
+    Route::get('/barangkeluar/get-by-jenis/{id}', [BarangKeluarController::class, 'getBarangByJenis']);
+    Route::post('/barangkeluar/store', [BarangKeluarController::class, 'store'])->name('barangkeluar.store');
+    Route::put('/barangkeluar/update/{id}', [BarangKeluarController::class, 'update'])->name('barangkeluar.update');
+    Route::get('/barangkeluar/delete/{id}', [BarangKeluarController::class, 'delete'])->name('barangkeluar.delete');
+    Route::post('/barangkeluar/delete-selected', [BarangKeluarController::class, 'deleteSelected']);
+
     Route::get('/keperluan', [KeperluanController::class, 'index'])->name('keperluan.index');
     Route::get('/keperluan/create', [KeperluanController::class, 'create'])->name('keperluan.create');
     Route::post('/keperluan/store', [KeperluanController::class, 'store'])->name('keperluan.store');
@@ -92,6 +102,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/keperluan/update/{id}', [KeperluanController::class, 'update'])->name('keperluan.update');
     Route::get('/keperluan/delete/{id}', [KeperluanController::class, 'delete'])->name('keperluan.delete');
     Route::post('/keperluan/delete-selected', [KeperluanController::class, 'deleteSelected']);
+
+    Route::get('/laporan/stok', [LaporanController::class, 'stok'])->name('laporan.stok.index');
+    Route::get('/laporan/barangmasuk', [LaporanController::class, 'barangmasuk'])->name('laporan.barangmasuk.index');
+    Route::get('/laporan/barangkeluar', [LaporanController::class, 'barangkeluar'])->name('laporan.barangkeluar.index');
 });
 
 require __DIR__.'/auth.php';
