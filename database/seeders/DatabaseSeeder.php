@@ -17,6 +17,11 @@ class DatabaseSeeder extends Seeder
     {
         $users = [
             [
+                'name' => 'Admin Gudang',
+                'email' => 'admin@gmail.com',
+                'password' => Hash::make('12345678'),
+            ],
+            [
                 'name' => 'Rayya RR',
                 'email' => 'rayya@gmail.com',
                 'password' => Hash::make('123123123'),

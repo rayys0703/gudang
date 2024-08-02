@@ -3,18 +3,18 @@ Sistem Inventaris Gudang - Barang Masuk dan Barang Keluar
 
 ![App Screenshot](https://github.com/rayys0703/)
 
-## Admin credentials
+## Akun Admin Gudang
 **email:** admin@gmail.com
 **password:** 12345678
 
 ## Tech Stack
 
-**Client:** Bootstrap, Jquery
+**Client:** Bootstrap, Jquery, Sweetalert2, Select2
 
 **Server:** PHP 8.2.x, Laravel 11.x
 
   
-## Menu
+## List Menu
 
 - Dashboard
 - Daftar barang
@@ -27,7 +27,10 @@ Sistem Inventaris Gudang - Barang Masuk dan Barang Keluar
 - Permintaan barang keluar
 - Daftar keperluan
 - Barang keluar
-- Profile
+- Laporan Stok
+- Laporan Barang Masuk
+- Laporan Barang Keluar
+- Profile (Untuk edit informasi akun)
   
 ## Installation 
 
