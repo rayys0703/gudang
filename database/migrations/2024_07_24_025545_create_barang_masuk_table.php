@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('barang_masuk', function (Blueprint $table) {
             $table->bigIncrements('id')->unique()->unsigned();
-            $table->string('bm_kode')->unique();
+            //$table->string('bm_kode')->unique();
             $table->bigInteger('serial_number')->unique();
             $table->unsignedBigInteger('supplier_id');
             $table->unsignedBigInteger('barang_id');

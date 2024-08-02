@@ -61,7 +61,7 @@ class BarangMasukController extends Controller
 		$supplier = DB::table('supplier')->select('id', 'nama')->orderBy('nama', 'asc')->get();
 		$status_barang = DB::table('status_barang')->select('id', 'nama')->orderBy('nama', 'asc')->get();
 
-		$bm_kode = DB::table('barang_masuk')->orderBy('id', 'desc')->value('bm_kode');
+		/*$bm_kode = DB::table('barang_masuk')->orderBy('id', 'desc')->value('bm_kode');
 
 		if ($bm_kode) {
 			$angkaTerakhir = intval(substr($bm_kode, 3));
@@ -69,7 +69,8 @@ class BarangMasukController extends Controller
 			$bm_kode_value = 'BM_' . str_pad($angkaSelanjutnya, 3, '0', STR_PAD_LEFT);
 		} else {
 			$bm_kode_value = 'BM_' . str_pad(1, 3, '0', STR_PAD_LEFT);
-		}
+		}*/
+		$bm_kode_value = NULL;
 
 		return view('barangmasuk.create', compact('barangMasuk', 'supplier', 'barang', 'barangbyjenis', 'jenis_barang', 'jenis_barang_id', 'status_barang', 'bm_kode_value'));
 	}
@@ -129,7 +130,7 @@ class BarangMasukController extends Controller
 			'tanggal.before_or_equal' => 'Tanggal tidak boleh lebih dari hari ini.',
         ]);
 		
-		$bm_kode = DB::table('barang_masuk')->orderBy('id', 'desc')->value('bm_kode');
+		/*$bm_kode = DB::table('barang_masuk')->orderBy('id', 'desc')->value('bm_kode');
 
 		if ($bm_kode) {
 			$angkaTerakhir = intval(substr($bm_kode, 3));
@@ -137,10 +138,10 @@ class BarangMasukController extends Controller
 			$bm_kode_value = 'BM_' . str_pad($angkaSelanjutnya, 3, '0', STR_PAD_LEFT);
 		} else {
 			$bm_kode_value = 'BM_' . str_pad(1, 3, '0', STR_PAD_LEFT);
-		}
+		}*/
 
 		$data = BarangMasuk::create([
-			'bm_kode' => $bm_kode_value,
+			//'bm_kode' => $bm_kode_value,
 			'serial_number' => $request->serial_number,
 			'supplier_id' => $request->supplier_id,
 			'barang_id' => $request->barang_id,

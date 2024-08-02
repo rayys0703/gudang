@@ -174,14 +174,15 @@ class PermintaanBarangKeluarController extends Controller
 			if ($request->status === 'Disetujui') {
 				$permintaanBarang = DB::table('permintaan_barang_keluar')
 					->join('barang_masuk', 'permintaan_barang_keluar.barangmasuk_id', '=', 'barang_masuk.id')
-					->select('permintaan_barang_keluar.*', 'barang_masuk.*')
+					->select('permintaan_barang_keluar.*', 'barang_masuk.*', 'permintaan_barang_keluar.id as pbm_id', 'barang_masuk.id as bm_id')
 					->where('permintaan_barang_keluar.id', $request->id)
 					->first();
 				
 				if ($permintaanBarang) {
 					$insertData = DB::table('barang_keluar')->insert([
-						'permintaan_id' => $permintaanBarang->id,
-						'tanggal' => now(),												
+						'permintaan_id' => $permintaanBarang->pbm_id,
+						'tanggal' => now(),			
+						'created_at' => now(),
 						//'keterangan' => $permintaanBarang->keterangan,						
 					]);
 

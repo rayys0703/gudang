@@ -33,8 +33,8 @@ class BarangKeluarController extends Controller
                 ->orWhere('barang_masuk.serial_number', 'like', '%' . $search . '%')
                 ->orWhere('barang_keluar.tanggal', 'like', '%' . $search . '%');
         })
-        ->orderBy('barang_keluar.tanggal', 'desc')
-        ->orderBy('barang_masuk.serial_number', 'desc')
+        ->orderBy('barang_keluar.created_at', 'desc')
+        //->orderBy('barang_masuk.serial_number', 'desc')
         ->paginate(7);
 
 		$data->getCollection()->transform(function ($item) {
