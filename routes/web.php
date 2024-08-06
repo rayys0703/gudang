@@ -11,6 +11,7 @@ use App\Http\Controllers\PermintaanBarangKeluarController;
 use App\Http\Controllers\BarangKeluarController;
 use App\Http\Controllers\KeperluanController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\SerialNumberController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -76,6 +77,14 @@ Route::middleware('auth')->group(function () {
     Route::put('/barangmasuk/update/{id}', [BarangMasukController::class, 'update'])->name('barangmasuk.update');
     Route::get('/barangmasuk/delete/{id}', [BarangMasukController::class, 'delete'])->name('barangmasuk.delete');
     Route::post('/barangmasuk/delete-selected', [BarangMasukController::class, 'deleteSelected']);
+
+    Route::get('/serialnumber', [SerialNumberController::class, 'index'])->name('serialnumber.index');
+    Route::get('/serialnumber/create', [SerialNumberController::class, 'create'])->name('serialnumber.create');
+    Route::post('/serialnumber/store', [SerialNumberController::class, 'store'])->name('serialnumber.store');
+    Route::get('/serialnumber/edit/{id}', [SerialNumberController::class, 'edit'])->name('serialnumber.edit');
+    Route::put('/serialnumber/update/{id}', [SerialNumberController::class, 'update'])->name('serialnumber.update');
+    Route::get('/serialnumber/delete/{id}', [SerialNumberController::class, 'delete'])->name('serialnumber.delete');
+    Route::post('/serialnumber/delete-selected', [SerialNumberController::class, 'deleteSelected']);
 
     Route::get('/permintaanbarangkeluar', [PermintaanBarangKeluarController::class, 'index'])->name('permintaanbarangkeluar.index');
     Route::get('/permintaanbarangkeluar/create', [PermintaanBarangKeluarController::class, 'create'])->name('permintaanbarangkeluar.create');

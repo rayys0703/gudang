@@ -13,10 +13,9 @@ class BarangMasuk extends Model
 
     protected $fillable = [
         //'bm_kode',
-        'serial_number',
-        'supplier_id',
+        //'serial_number',
         'barang_id',
-        'status_barang_id',
+        //'status_barang_id',
         'jumlah',
         'keterangan',
         'tanggal'

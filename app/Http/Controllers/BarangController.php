@@ -18,11 +18,13 @@ class BarangController extends Controller
 		$search = $request->input('search');
 
 		$data = DB::table('barang')
+			->leftJoin('supplier', 'barang.supplier_id', '=', 'supplier.id')
 			->leftJoin('jenis_barang', 'barang.jenis_barang_id', '=', 'jenis_barang.id')
-			->select('barang.*', 'jenis_barang.nama as nama_jenis_barang')
+			->select('barang.*', 'jenis_barang.nama as nama_jenis_barang', 'supplier.nama as nama_supplier')
 			->when($search, function ($query) use ($search) {
 				return $query->where('barang.nama', 'like', '%' . $search . '%')
-				->orWhere('jenis_barang.nama', 'like', '%' . $search . '%');
+				->orWhere('jenis_barang.nama', 'like', '%' . $search . '%')
+				->orWhere('supplier.nama', 'like', '%' . $search . '%');
 			})
 			->orderBy('barang.jumlah', 'desc')
 			->paginate(7);
@@ -33,7 +35,8 @@ class BarangController extends Controller
 	public function create()
 	{
 		$jenis_barang = DB::table('jenis_barang')->select('id', 'nama')->get();
-		return view('barang.create', compact('jenis_barang'));
+		$supplier = DB::table('supplier')->select('id', 'nama')->get();
+		return view('barang.create', compact('jenis_barang','supplier'));
 	}
 
 	public function store(Request $request): RedirectResponse
@@ -41,6 +44,7 @@ class BarangController extends Controller
 		$request->validate([
 			'nama' => 'required|string|max:255',
 			'jenis_barang' => 'required|numeric',
+			'supplier_id' => 'required|numeric',
 			//'status' => 'required|in:Baik,Rusak',
 			'keterangan' => 'nullable|string|max:255',
 		], [
@@ -49,6 +53,8 @@ class BarangController extends Controller
 			'nama.max' => 'Nama barang tidak boleh lebih dari 255 karakter.',
 			'jenis_barang.required' => 'Jenis barang harus dipilih.',
 			'jenis_barang.numeric' => 'Jenis barang harus berupa angka.',
+			'supplier_id.required' => 'Supplier harus dipilih.',
+			'supplier_id.numeric' => 'Supplier harus dipilih.',
 			'keterangan.string' => 'Keterangan harus berupa teks.',
 			'keterangan.max' => 'Keterangan tidak boleh lebih dari 255 karakter.',
 		]);
@@ -58,6 +64,7 @@ class BarangController extends Controller
 		$data = Barang::create([
 			'nama' => $request->nama,
 			'jenis_barang_id' => $request->jenis_barang,
+			'supplier_id' => $request->supplier_id,
 			'jumlah' => 0,
 			//'status' => $request->status,
 			'keterangan' => $request->keterangan,
@@ -69,8 +76,9 @@ class BarangController extends Controller
 	public function edit($id)
 	{
 		$jenis_barang = DB::table('jenis_barang')->select('id', 'nama')->get();
+		$supplier = DB::table('supplier')->select('id', 'nama')->get();
 		$data = Barang::find($id);
-		return view('barang.edit', compact('data','jenis_barang'));
+		return view('barang.edit', compact('data','jenis_barang','supplier'));
 	}
 
 	public function update($id, Request $request): RedirectResponse
@@ -78,6 +86,7 @@ class BarangController extends Controller
 		$request->validate([
 			'nama' => 'required|string|max:255',
 			'jenis_barang' => 'required|numeric',
+			'supplier_id' => 'required|numeric',
 			//'status' => 'required|in:Baik,Rusak',
 			'keterangan' => 'nullable|string|max:255',
 		], [
@@ -86,6 +95,8 @@ class BarangController extends Controller
 			'nama.max' => 'Nama barang tidak boleh lebih dari 255 karakter.',
 			'jenis_barang.required' => 'Jenis barang harus dipilih.',
 			'jenis_barang.numeric' => 'Jenis barang harus berupa angka.',
+			'supplier_id.required' => 'Supplier harus dipilih.',
+			'supplier_id.numeric' => 'Supplier harus dipilih.',
 			'keterangan.string' => 'Keterangan harus berupa teks.',
 			'keterangan.max' => 'Keterangan tidak boleh lebih dari 255 karakter.',
 		]);
@@ -94,6 +105,7 @@ class BarangController extends Controller
 
 		$data->nama = $request->nama;
 		$data->jenis_barang_id = $request->jenis_barang;
+		$data->supplier_id = $request->supplier_id;
 		//$data->status = $request->status;
 		$data->keterangan = $request->keterangan;
 

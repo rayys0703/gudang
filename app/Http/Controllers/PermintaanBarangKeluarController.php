@@ -23,7 +23,7 @@ class PermintaanBarangKeluarController extends Controller
         ->leftJoin('barang_masuk', 'permintaan_barang_keluar.barangmasuk_id', '=', 'barang_masuk.id')
         ->leftJoin('barang', 'barang_masuk.barang_id', '=', 'barang.id')
         ->leftJoin('jenis_barang', 'barang.jenis_barang_id', '=', 'jenis_barang.id')
-        ->leftJoin('supplier', 'barang_masuk.supplier_id', '=', 'supplier.id')
+        ->leftJoin('supplier', 'barang.supplier_id', '=', 'supplier.id')
         ->leftJoin('keperluan', 'permintaan_barang_keluar.keperluan_id', '=', 'keperluan.id')
         ->select('permintaan_barang_keluar.*', 'barang_masuk.serial_number as serial_number', 'customer.nama as nama_customer', 'barang.nama as nama_barang', 'keperluan.nama as nama_keperluan', 'jenis_barang.nama as nama_jenis_barang', 'supplier.nama as nama_supplier')
         ->selectRaw("DATE_FORMAT(permintaan_barang_keluar.tanggal, '%d %M %Y') as formatted_tanggal")

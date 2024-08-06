@@ -123,6 +123,7 @@ class DatabaseSeeder extends Seeder
                 'jenis_barang_id' => $jenis_barang_id,
                 'nama' => $faker->randomElement($nama_barang[$jenis]),
                 'jumlah' => 0,
+                'supplier_id' => $faker->numberBetween(1, 20),
             ];
         }
 

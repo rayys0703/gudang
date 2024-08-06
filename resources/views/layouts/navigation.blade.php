@@ -30,6 +30,9 @@
                     <x-nav-link :href="route('barang.index')" :active="request()->routeIs('barang.*')">
                         {{ __('Barang') }}
                     </x-nav-link>
+                    {{-- <x-nav-link :href="route('serialnumber.index')" :active="request()->routeIs('serialnumber.*')">
+                        {{ __('Serial Number') }}
+                    </x-nav-link> --}}
                     <x-nav-link :href="route('barangmasuk.index')" :active="request()->routeIs('barangmasuk.*')">
                         {{ __('Barang Masuk') }}
                     </x-nav-link>

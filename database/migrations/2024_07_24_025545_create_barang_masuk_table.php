@@ -14,18 +14,16 @@ return new class extends Migration
         Schema::create('barang_masuk', function (Blueprint $table) {
             $table->bigIncrements('id')->unique()->unsigned();
             //$table->string('bm_kode')->unique();
-            $table->bigInteger('serial_number')->unique();
-            $table->unsignedBigInteger('supplier_id');
+            //$table->bigInteger('serial_number')->unique();
             $table->unsignedBigInteger('barang_id');
-            $table->unsignedBigInteger('status_barang_id');
+            //$table->unsignedBigInteger('status_barang_id');
             $table->unsignedBigInteger('jumlah');
             $table->string('keterangan')->nullable();
             $table->date('tanggal');
             $table->timestamps();
 
-            $table->foreign('supplier_id')->references('id')->on('supplier')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('barang_id')->references('id')->on('barang')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('status_barang_id')->references('id')->on('status_barang')->onDelete('cascade')->onUpdate('cascade');
+            //$table->foreign('status_barang_id')->references('id')->on('status_barang')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

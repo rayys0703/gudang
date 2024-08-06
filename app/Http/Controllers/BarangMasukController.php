@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Barang;
 use App\Models\BarangMasuk;
+use App\Models\DetailBarangMasuk;
+use App\Models\SerialNumber;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,29 +19,48 @@ class BarangMasukController extends Controller
 	{
 		$search = $request->input('search');
 
-		$data = DB::table('barang_masuk')
-        ->leftJoin('supplier', 'barang_masuk.supplier_id', '=', 'supplier.id')
-        ->leftJoin('barang', 'barang_masuk.barang_id', '=', 'barang.id')
-        ->leftJoin('status_barang', 'barang_masuk.status_barang_id', '=', 'status_barang.id')
-        ->select('barang_masuk.*', 'supplier.nama as nama_supplier', 'barang.nama as nama_barang', 'status_barang.nama as nama_status_barang', 'status_barang.warna as warna_status_barang')
-        ->selectRaw("DATE_FORMAT(barang_masuk.tanggal, '%d %M %Y') as formatted_tanggal")
-        ->when($search, function ($query) use ($search) {
-            return $query->where('barang_masuk.barang_id', 'like', '%' . $search . '%')
-                ->orWhere('barang.nama', 'like', '%' . $search . '%')
-                ->orWhere('supplier.nama', 'like', '%' . $search . '%')
-                ->orWhere('status_barang.nama', 'like', '%' . $search . '%')
-                ->orWhere('barang_masuk.serial_number', 'like', '%' . $search . '%');
-        })
-        ->orderBy('barang_masuk.tanggal', 'asc')
-        ->paginate(7);
+		$barangMasuk = DB::table('barang_masuk')
+			->leftJoin('barang', 'barang_masuk.barang_id', '=', 'barang.id')
+			->leftJoin('supplier', 'barang.supplier_id', '=', 'supplier.id')
+			->leftJoin('jenis_barang', 'barang.jenis_barang_id', '=', 'jenis_barang.id')
+			->select(
+				'barang_masuk.id as barang_masuk_id',
+				'barang_masuk.keterangan',
+				'barang_masuk.tanggal',
+				'barang.nama as nama_barang',
+				'jenis_barang.nama as nama_jenis_barang',
+				'supplier.nama as nama_supplier',
+				'barang_masuk.jumlah'
+			)
+			->selectRaw("DATE_FORMAT(barang_masuk.tanggal, '%d %M %Y') as formatted_tanggal")
+			->when($search, function ($query) use ($search) {
+				return $query->where('barang_masuk.barang_id', 'like', '%' . $search . '%')
+					->orWhere('barang.nama', 'like', '%' . $search . '%')
+					->orWhere('supplier.nama', 'like', '%' . $search . '%');
+			})
+			->orderBy('barang_masuk.created_at', 'desc')
+			->paginate(7);
 
-		$data->getCollection()->transform(function ($item) {
+		// Ambil detail barang masuk
+		foreach ($barangMasuk as $item) {
+			$item->detail = DB::table('detail_barang_masuk')
+				->leftJoin('serial_number', 'detail_barang_masuk.serial_number_id', '=', 'serial_number.id')
+				->leftJoin('status_barang', 'detail_barang_masuk.status_barang_id', '=', 'status_barang.id')
+				->select('serial_number.serial_number', 'status_barang.nama as status_barang')
+				->where('detail_barang_masuk.barangmasuk_id', $item->barang_masuk_id)
+				->orderBy('serial_number.serial_number', 'asc')
+				->get();
+		}
+
+		// Transform data untuk modal
+		$barangMasuk->getCollection()->transform(function ($item) {
 			$item->tanggal = \Carbon\Carbon::parse($item->tanggal)->isoFormat('DD MMMM YYYY');
 			return $item;
 		});
 
-        return view('barangmasuk.index', compact('data'));
+		return view('barangmasuk.index', compact('barangMasuk'));
 	}
+
 
 	public function create($id = null)
 	{
@@ -106,55 +127,52 @@ class BarangMasukController extends Controller
 	public function store(Request $request): RedirectResponse
 	{
 		$request->validate([
-			'serial_number' => 'required|numeric|unique:barang_masuk,serial_number',
-			'supplier_id' => 'required|numeric',
 			'barang_id' => 'required|numeric',
-			'status_barang_id' => 'required|numeric',
-			//'jumlah' => 'required|numeric|max:255',
 			'keterangan' => 'nullable|string|max:255',
 			'tanggal' => 'required|date_format:Y-m-d|before_or_equal:today',
+			'serial_numbers.*' => 'required|string|max:255|unique:serial_number,serial_number',
+			'status_barangs.*' => 'required|exists:status_barang,id',
 		], [
-			'serial_number.required' => 'Serial Number harus diisi.',
-			'serial_number.numeric' => 'Serial Number harus berupa angka.',
-			'serial_number.unique' => 'Serial Number sudah digunakan.',
-			'supplier_id.required' => 'Supplier harus dipilih.',
-			'supplier_id.numeric' => 'Supplier harus dipilih.',
 			'barang_id.required' => 'Barang harus dipilih.',
 			'barang_id.numeric' => 'Barang harus dipilih.',
-			'status_barang_id.required' => 'Kondisi barang harus dipilih.',
-			'status_barang_id.numeric' => 'Kondisi barang harus dipilih.',
 			'keterangan.string' => 'Keterangan harus berupa teks.',
 			'keterangan.max' => 'Keterangan tidak boleh lebih dari 255 karakter.',
 			'tanggal.required' => 'Tanggal harus diisi.',
 			'tanggal.date_format' => 'Format tanggal harus YYYY-MM-DD.',
 			'tanggal.before_or_equal' => 'Tanggal tidak boleh lebih dari hari ini.',
+			'serial_numbers.*.required' => 'Serial Number harus diisi.',
+			'serial_numbers.*.string' => 'Serial Number harus berupa teks.',
+			'serial_numbers.*.max' => 'Serial Number tidak boleh lebih dari 255 karakter.',
+			'serial_numbers.*.unique' => 'Serial Number sudah digunakan.',
+			'status_barangs.*.required' => 'Kondisi Barang harus dipilih.',
+			'status_barangs.*.exists' => 'Kondisi Barang yang dipilih tidak valid.',
         ]);
-		
-		/*$bm_kode = DB::table('barang_masuk')->orderBy('id', 'desc')->value('bm_kode');
 
-		if ($bm_kode) {
-			$angkaTerakhir = intval(substr($bm_kode, 3));
-			$angkaSelanjutnya = $angkaTerakhir + 1;
-			$bm_kode_value = 'BM_' . str_pad($angkaSelanjutnya, 3, '0', STR_PAD_LEFT);
-		} else {
-			$bm_kode_value = 'BM_' . str_pad(1, 3, '0', STR_PAD_LEFT);
-		}*/
-
-		$data = BarangMasuk::create([
-			//'bm_kode' => $bm_kode_value,
-			'serial_number' => $request->serial_number,
-			'supplier_id' => $request->supplier_id,
+		$barangMasuk = BarangMasuk::create([
 			'barang_id' => $request->barang_id,
-			'status_barang_id' => $request->status_barang_id,
-			//'jumlah' => $request->jumlah,
-			'jumlah' => 1,
+			'jumlah' => count($request->serial_numbers),
 			'keterangan' => $request->keterangan,
 			'tanggal' => $request->tanggal,
 		]);
 
 		$barang = Barang::find($request->barang_id);
-		$barang->jumlah += 1; //$request->jumlah;
+		$barang->jumlah += $barangMasuk->jumlah;
 		$barang->save();
+
+		foreach ($request->serial_numbers as $index => $serialNumber) {
+			// Simpan data serial number
+			$serial = SerialNumber::create([
+				'serial_number' => $serialNumber,
+				'barangmasuk_id' => $barangMasuk->id,  // Relasi ke barang masuk yang baru saja dibuat
+			]);
+	
+			// Simpan detail barang masuk
+			DetailBarangMasuk::create([
+				'barangmasuk_id' => $barangMasuk->id,
+				'serial_number_id' => $serial->id,
+				'status_barang_id' => $request->status_barangs[$index],  // Ambil status barang yang sesuai
+			]);
+		}
 
 		return redirect('/barangmasuk')->with('success', 'Anda berhasil menambahkan data!');
 	}
@@ -202,29 +220,62 @@ class BarangMasukController extends Controller
 	}
 		*/
 
-	public function delete($id)
-	{
-		$data = BarangMasuk::find($id);
-		$barang = Barang::find($data->barang_id);
-		$barang->jumlah -= $data->jumlah;
-		$barang->save();
-
-		$data->delete();
-		return redirect('/barangmasuk')->with('success', 'Anda berhasil menghapus data!');
-	}
-
-	public function deleteSelected(Request $request)
-	{
-		$ids = $request->input('ids');
-		foreach ($ids as $id) {
+		public function delete($id)
+		{
 			$data = BarangMasuk::find($id);
+		
 			if ($data) {
+				// Temukan semua serial number yang terkait dengan barang masuk ini
+				$serialNumbers = SerialNumber::where('barangmasuk_id', $data->id)->get();
+		
+				// Hapus detail barang masuk yang terkait
+				foreach ($serialNumbers as $serialNumber) {
+					DetailBarangMasuk::where('serial_number_id', $serialNumber->id)->delete();
+					$serialNumber->delete();
+				}
+		
+				// Update jumlah barang di tabel barang
 				$barang = Barang::find($data->barang_id);
 				$barang->jumlah -= $data->jumlah;
 				$barang->save();
+		
+				// Hapus barang masuk
 				$data->delete();
+		
+				return redirect('/barangmasuk')->with('success', 'Anda berhasil menghapus data!');
+			} else {
+				return redirect('/barangmasuk')->with('error', 'Data tidak ditemukan!');
 			}
 		}
-		return response()->json(['success' => 'Data berhasil dihapus']);
-	}
+
+		public function deleteSelected(Request $request)
+		{
+			$ids = $request->input('ids');
+
+			foreach ($ids as $id) {
+				$data = BarangMasuk::find($id);
+
+				if ($data) {
+					// Temukan semua serial number yang terkait dengan barang masuk ini
+					$serialNumbers = SerialNumber::where('barangmasuk_id', $data->id)->get();
+
+					// Hapus detail barang masuk yang terkait
+					foreach ($serialNumbers as $serialNumber) {
+						DetailBarangMasuk::where('serial_number_id', $serialNumber->id)->delete();
+						$serialNumber->delete();
+					}
+
+					// Update jumlah barang di tabel barang
+					$barang = Barang::find($data->barang_id);
+					$barang->jumlah -= $data->jumlah;
+					$barang->save();
+
+					// Hapus barang masuk
+					$data->delete();
+				}
+			}
+
+			return response()->json(['success' => 'Data berhasil dihapus']);
+		}
+
 }

@@ -108,14 +108,9 @@ class SupplierController extends Controller
 	{
 		$supplier = Supplier::find($id);
 
-		$barangMasuk = BarangMasuk::where('supplier_id', $id)->get();
+		$barang = Barang::where('supplier_id', $id)->get();
 
-		foreach ($barangMasuk as $item) {
-			$barang = Barang::find($item->barang_id);
-			if ($barang) {
-				$barang->jumlah -= $item->jumlah;
-				$barang->save();
-			}
+		foreach ($barang as $item) {
 			$item->delete();
 		}
 
@@ -130,14 +125,9 @@ class SupplierController extends Controller
 			$supplier = Supplier::find($id);
 
 			if ($supplier) {
-				$barangMasuk = BarangMasuk::where('supplier_id', $id)->get();
-
-				foreach ($barangMasuk as $item) {
-					$barang = Barang::find($item->barang_id);
-					if ($barang) {
-						$barang->jumlah -= $item->jumlah;
-						$barang->save();
-					}
+				$barang = Barang::where('supplier_id', $id)->get();
+				
+				foreach ($barang as $item) {
 					$item->delete();
 				}
 
