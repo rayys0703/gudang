@@ -147,7 +147,7 @@ class BarangMasukController extends Controller
 			'status_barangs.*.required' => 'Kondisi Barang harus dipilih.',
 			'status_barangs.*.exists' => 'Kondisi Barang yang dipilih tidak valid.',
         ]); 
-
+ 
 		$barangMasuk = BarangMasuk::create([
 			'barang_id' => $request->barang_id,
 			'jumlah' => count($request->serial_numbers),
