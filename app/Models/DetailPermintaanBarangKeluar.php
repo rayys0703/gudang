@@ -12,10 +12,8 @@ class DetailPermintaanBarangKeluar extends Model
     protected $table = "detail_permintaan_bk";
 
     protected $fillable = [
-        'customer_id',
-        'keperluan_id',
-        'tanggal',
-        'keterangan',
-        'status'
+        'permintaan_barang_keluar_id',
+        'serial_number_id',
+        'keterangan'
     ];
 }

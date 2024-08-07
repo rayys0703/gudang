@@ -51,8 +51,8 @@
                             class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div class="mb-5">
-                        <label for="tanggal" class="block mb-2 text-sm font-medium text-gray-900">Tanggal</label>
-                        <input type="date" id="tanggal" name="tanggal"
+                        <label for="tanggal_awal" class="block mb-2 text-sm font-medium text-gray-900">Tanggal</label>
+                        <input type="date" id="tanggal_awal" name="tanggal_awal"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             value="{{ date('Y-m-d') }}" required />
                     </div>
@@ -111,7 +111,7 @@
                             <div class="mb-5">
                                 <label for="serialnumber_1" class="block mb-2 text-sm font-medium text-gray-900">Serial
                                     Number</label>
-                                <select id="serialnumber_1" name="serialnumber[]"
+                                <select id="serialnumber_1" name="serial_numbers[]"
                                     class="select2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                     <option selected>Pilih serial number</option>
                                 </select>
