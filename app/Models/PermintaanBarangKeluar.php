@@ -12,11 +12,10 @@ class PermintaanBarangKeluar extends Model
     protected $table = "permintaan_barang_keluar";
 
     protected $fillable = [
-        'barangmasuk_id',
         'customer_id',
         'keperluan_id',
         'tanggal',
-        'catatan',
+        'keterangan',
         'status'
     ];
 }

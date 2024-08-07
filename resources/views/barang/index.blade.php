@@ -51,7 +51,7 @@
                                     Supplier
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Jumlah
+                                    Stok
                                 </th>
                                 {{-- <th scope="col" class="px-6 py-3">
                                     Kondisi

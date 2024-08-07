@@ -129,21 +129,23 @@
                                                     <div class="col-span-7">{{ $d->keterangan }}</div>
                                                     <div class="font-bold col-span-3">Jumlah:</div>
                                                     <div class="col-span-7">{{ $d->jumlah }}</div>
-                                                    <hr class="col-span-10 my-2">
 
                                                     <!-- Detail barang -->
                                                     @foreach ($d->detail as $index => $detail)
+                                                        <hr class="col-span-10 my-2">
                                                         <div class="font-bold col-span-3">Barang {{ $index + 1 }}:</div>
                                                         <div class="col-span-7">
                                                             <div class="font-bold">SN / Kondisi</div>
                                                             <div class="ml-5">{{ $detail->serial_number }} — {{ $detail->status_barang }}</div>
+                                                            <div class="font-bold">Kelengkapan</div>
+                                                            <div class="ml-5">{{ $detail->kelengkapan }}</div>
                                                         </div>
                                                     @endforeach
                                                 </div>
                                             </div>
-                                            <div class="modal-footer gap-x-3">
+                                            {{-- <div class="modal-footer gap-x-3">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>

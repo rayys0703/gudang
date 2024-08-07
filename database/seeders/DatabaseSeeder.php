@@ -116,13 +116,13 @@ class DatabaseSeeder extends Seeder
             'alat rumah tangga' => ['Sapu', 'Pel', 'Ember', 'Keset', 'Rak Piring', 'Gelas', 'Sendok', 'Gunting', 'Pisau']
         ];
 
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 15; $i++) {
             $jenis = $faker->randomElement($jenis_barang);
             $jenis_barang_id = array_search($jenis, $jenis_barang) + 1;
             $barang[] = [
                 'jenis_barang_id' => $jenis_barang_id,
                 'nama' => $faker->randomElement($nama_barang[$jenis]),
-                'jumlah' => 0,
+                //'jumlah' => 0,
                 'supplier_id' => $faker->numberBetween(1, 20),
             ];
         }

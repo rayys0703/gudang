@@ -13,15 +13,16 @@ return new class extends Migration
     {
         Schema::create('permintaan_barang_keluar', function (Blueprint $table) {
             $table->bigIncrements('id')->unique()->unsigned();
-            $table->unsignedBigInteger('barangmasuk_id');
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('keperluan_id');
+            $table->unsignedBigInteger('jumlah');
             $table->string('keterangan')->nullable();
             $table->date('tanggal');
             $table->enum('status', ['Belum Disetujui', 'Disetujui', 'Ditolak'])->default('Belum Disetujui');
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
 
-            $table->foreign('barangmasuk_id')->references('id')->on('barang_masuk')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
             $table->foreign('customer_id')->references('id')->on('customer')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('keperluan_id')->references('id')->on('keperluan')->onDelete('cascade')->onUpdate('cascade');
         });

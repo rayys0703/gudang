@@ -20,13 +20,15 @@ class BarangController extends Controller
 		$data = DB::table('barang')
 			->leftJoin('supplier', 'barang.supplier_id', '=', 'supplier.id')
 			->leftJoin('jenis_barang', 'barang.jenis_barang_id', '=', 'jenis_barang.id')
-			->select('barang.*', 'jenis_barang.nama as nama_jenis_barang', 'supplier.nama as nama_supplier')
+			->leftJoin('barang_masuk', 'barang.id', '=', 'barang_masuk.barang_id')
+			->select('barang.*', 'jenis_barang.nama as nama_jenis_barang', 'supplier.nama as nama_supplier', DB::raw('SUM(barang_masuk.jumlah) as jumlah'))
 			->when($search, function ($query) use ($search) {
 				return $query->where('barang.nama', 'like', '%' . $search . '%')
 				->orWhere('jenis_barang.nama', 'like', '%' . $search . '%')
 				->orWhere('supplier.nama', 'like', '%' . $search . '%');
 			})
-			->orderBy('barang.jumlah', 'desc')
+			->groupBy('barang.id', 'barang.nama', 'barang.jenis_barang_id', 'barang.supplier_id', 'barang.keterangan', 'barang.created_at', 'barang.updated_at', 'jenis_barang.nama', 'supplier.nama')
+			->orderBy('jumlah', 'desc')
 			->paginate(7);
 			
         return view('barang.index', compact('data'));
@@ -65,7 +67,7 @@ class BarangController extends Controller
 			'nama' => $request->nama,
 			'jenis_barang_id' => $request->jenis_barang,
 			'supplier_id' => $request->supplier_id,
-			'jumlah' => 0,
+			//'jumlah' => 0,
 			//'status' => $request->status,
 			'keterangan' => $request->keterangan,
 		]);

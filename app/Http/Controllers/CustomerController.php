@@ -61,6 +61,7 @@ class CustomerController extends Controller
 			'alamat' => $request->alamat,
 			'telepon' => $request->telepon,
 			'keterangan' => $request->keterangan,
+			'created_by' => Auth::id(),
 		]);
 
 		return redirect('/customer')->with('success', 'Anda berhasil menambahkan data!');
@@ -99,6 +100,7 @@ class CustomerController extends Controller
 		$data->alamat = $request->alamat;
 		$data->telepon = $request->telepon;
 		$data->keterangan = $request->keterangan;
+		$data->updated_by = Auth::id();
 		$data->save();
 
 		return redirect('/customer')->with('success', 'Anda berhasil memperbarui data!');

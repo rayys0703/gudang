@@ -139,6 +139,13 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="mb-5">
+                                    <label for="kelengkapan_1"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelengkapan (Opsional)</label>
+                                    <input type="text" id="kelengkapan_1" name="kelengkapans[]"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="" />
+                                </div>
                                 <button type="button" class="!hidden remove-barang-button text-red-600 hover:text-red-800">Hapus Barang</button>
                             </div>
                         </div>
@@ -184,6 +191,13 @@
                                 <option value="{{ $d->id }}">{{ $d->nama }}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="mb-5">
+                        <label for="kelengkapan_${index}"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelengkapan (Opsional)</label>
+                        <input type="text" id="kelengkapan_${index}" name="kelengkapans[]"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="" />
                     </div>
                     <button type="button" class="!hidden remove-barang-button text-red-600 hover:text-red-800">Hapus Barang</button>
                 `;

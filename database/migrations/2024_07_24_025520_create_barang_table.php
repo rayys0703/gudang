@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('jenis_barang_id');
             $table->unsignedBigInteger('supplier_id');
             $table->string('nama');
-            $table->bigInteger('jumlah')->default(0);
+            //$table->bigInteger('jumlah')->default(0);
             //$table->enum('status', ['Rusak', 'Baik'])->default('Baik');
             $table->string('keterangan')->nullable();
             $table->timestamps();

@@ -15,5 +15,6 @@ class DetailBarangMasuk extends Model
         'barangmasuk_id',
         'serial_number_id',
         'status_barang_id',
+        'kelengkapan',
     ];
 }

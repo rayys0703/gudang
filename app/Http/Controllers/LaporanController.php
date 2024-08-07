@@ -25,20 +25,19 @@ class LaporanController extends Controller
                 'barang_masuk.barang_id',
                 'barang.id as valbarang_id',
                 'barang.nama as nama_barang',
-                'barang.jumlah as jumlah_barang',
                 'barang.keterangan as keterangan_barang',
                 'jenis_barang.nama as nama_jenis_barang',
                 'supplier.nama as supplier_name',
-                'barang_masuk.serial_number',
                 'status_barang.nama as status_name',
-                'status_barang.warna as warna_status'
+                'status_barang.warna as warna_status',
+                DB::raw('SUM(barang_masuk.jumlah) as jumlah')
             )
-            ->where('barang.jumlah', '>', 0)
+            ->where('jumlah', '>', 0)
             ->when($search, function ($query) use ($search) {
                 return $query->where('barang.nama', 'like', '%' . $search . '%')
                     ->orWhere('jenis_barang.nama', 'like', '%' . $search . '%');
             })
-            ->orderBy('barang.jumlah','desc')
+            ->orderBy('jumlah','desc')
             ->orderBy('barang.nama','asc');
 
         $data = $query->get();

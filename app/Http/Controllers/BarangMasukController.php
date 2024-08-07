@@ -46,7 +46,7 @@ class BarangMasukController extends Controller
 			$item->detail = DB::table('detail_barang_masuk')
 				->leftJoin('serial_number', 'detail_barang_masuk.serial_number_id', '=', 'serial_number.id')
 				->leftJoin('status_barang', 'detail_barang_masuk.status_barang_id', '=', 'status_barang.id')
-				->select('serial_number.serial_number', 'status_barang.nama as status_barang')
+				->select('serial_number.serial_number', 'status_barang.nama as status_barang', 'detail_barang_masuk.kelengkapan')
 				->where('detail_barang_masuk.barangmasuk_id', $item->barang_masuk_id)
 				->orderBy('serial_number.serial_number', 'asc')
 				->get();
@@ -132,6 +132,7 @@ class BarangMasukController extends Controller
 			'tanggal' => 'required|date_format:Y-m-d|before_or_equal:today',
 			'serial_numbers.*' => 'required|string|max:255|unique:serial_number,serial_number',
 			'status_barangs.*' => 'required|exists:status_barang,id',
+			'kelengkapans.*' => 'nullable|string|max:255',
 		], [
 			'barang_id.required' => 'Barang harus dipilih.',
 			'barang_id.numeric' => 'Barang harus dipilih.',
@@ -146,6 +147,8 @@ class BarangMasukController extends Controller
 			'serial_numbers.*.unique' => 'Serial Number sudah digunakan.',
 			'status_barangs.*.required' => 'Kondisi Barang harus dipilih.',
 			'status_barangs.*.exists' => 'Kondisi Barang yang dipilih tidak valid.',
+			'kelengkapans.string' => 'Kelengkapan harus berupa teks.',
+			'kelengkapans.max' => 'Kelengkapan tidak boleh lebih dari 255 karakter.',
         ]); 
  
 		$barangMasuk = BarangMasuk::create([
@@ -155,22 +158,23 @@ class BarangMasukController extends Controller
 			'tanggal' => $request->tanggal,
 		]);
 
-		$barang = Barang::find($request->barang_id);
+		/*$barang = Barang::find($request->barang_id);
 		$barang->jumlah += $barangMasuk->jumlah;
-		$barang->save();
+		$barang->save();*/
 
 		foreach ($request->serial_numbers as $index => $serialNumber) {
 			// Simpan data serial number
 			$serial = SerialNumber::create([
 				'serial_number' => $serialNumber,
-				'barangmasuk_id' => $barangMasuk->id,  // Relasi ke barang masuk yang baru saja dibuat
+				'barangmasuk_id' => $barangMasuk->id,
 			]);
 	
 			// Simpan detail barang masuk
 			DetailBarangMasuk::create([
 				'barangmasuk_id' => $barangMasuk->id,
 				'serial_number_id' => $serial->id,
-				'status_barang_id' => $request->status_barangs[$index],  // Ambil status barang yang sesuai
+				'status_barang_id' => $request->status_barangs[$index],
+				'kelengkapan' => $request->kelengkapans[$index],
 			]);
 		}
 
@@ -235,9 +239,9 @@ class BarangMasukController extends Controller
 				}
 		
 				// Update jumlah barang di tabel barang
-				$barang = Barang::find($data->barang_id);
+				/*$barang = Barang::find($data->barang_id);
 				$barang->jumlah -= $data->jumlah;
-				$barang->save();
+				$barang->save();*/
 		
 				// Hapus barang masuk
 				$data->delete();
@@ -266,9 +270,9 @@ class BarangMasukController extends Controller
 					}
 
 					// Update jumlah barang di tabel barang
-					$barang = Barang::find($data->barang_id);
+					/*$barang = Barang::find($data->barang_id);
 					$barang->jumlah -= $data->jumlah;
-					$barang->save();
+					$barang->save();*/
 
 					// Hapus barang masuk
 					$data->delete();
