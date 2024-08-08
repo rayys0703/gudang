@@ -153,13 +153,10 @@
                                                     <!-- Detail barang -->
                                                     @foreach ($d->detail as $index => $detail)
                                                         <hr class="col-span-10 my-2">
-                                                        <div class="font-bold col-span-3">Barang {{ $index + 1 }}:</div>
-                                                        <div class="col-span-7">
-                                                            <div class="font-bold">SN / Kondisi</div>
-                                                            <div class="ml-5">{{ $detail->serial_number }} — {{ $detail->status_barang }}</div>
-                                                            <div class="font-bold">Kelengkapan</div>
-                                                            <div class="ml-5">{{ $detail->kelengkapan }}</div>
-                                                        </div>
+                                                        <div class="font-bold col-span-3">Barang {{ $index + 1 }}</div>
+                                                        <div class="col-span-7">{{ $detail->serial_number }} — <span style="color:{{ $detail->warna_status_barang }}">{{ $detail->status_barang }}</span></div>
+                                                        <div class="col-span-3">Kelengkapan</div>
+                                                        <div class="col-span-7">{{ $detail->kelengkapan ? : '—' }}</div>
                                                     @endforeach
                                                 </div>
                                             </div>

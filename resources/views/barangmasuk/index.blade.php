@@ -72,7 +72,8 @@
                                     <td class="px-6 py-4 flex gap-x-2">
                                         <button type="button"
                                             class="flex text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center"
-                                            data-bs-toggle="modal" data-bs-target="#detailModal{{ $d->barang_masuk_id }}">
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#detailModal{{ $d->barang_masuk_id }}">
                                             <svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'
                                                 stroke="white" stroke-width="2" fill="none" width="18"
                                                 height="18">
@@ -93,7 +94,19 @@
                                         <a href="/barangmasuk/create/{{ $d->barang_masuk_id }}"
                                             class="flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center"
                                             type="button">
-                                            <svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' stroke="white" stroke-width="2" fill="none" width="18" height="18"><g transform='translate(2.300000, 2.300000)'><line x1='9.73684179' y1='6.162632' x2='9.73684179' y2='13.3110531'></line><line x1='13.3146315' y1='9.73684179' x2='6.158842' y2='9.73684179'></line><path d='M-3.55271368e-14,9.73684211 C-3.55271368e-14,2.43473684 2.43473684,2.13162821e-14 9.73684211,2.13162821e-14 C17.0389474,2.13162821e-14 19.4736842,2.43473684 19.4736842,9.73684211 C19.4736842,17.0389474 17.0389474,19.4736842 9.73684211,19.4736842 C2.43473684,19.4736842 -3.55271368e-14,17.0389474 -3.55271368e-14,9.73684211 Z'></path></g></svg>
+                                            <svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'
+                                                stroke="white" stroke-width="2" fill="none" width="18"
+                                                height="18">
+                                                <g transform='translate(2.300000, 2.300000)'>
+                                                    <line x1='9.73684179' y1='6.162632' x2='9.73684179'
+                                                        y2='13.3110531'></line>
+                                                    <line x1='13.3146315' y1='9.73684179' x2='6.158842'
+                                                        y2='9.73684179'></line>
+                                                    <path
+                                                        d='M-3.55271368e-14,9.73684211 C-3.55271368e-14,2.43473684 2.43473684,2.13162821e-14 9.73684211,2.13162821e-14 C17.0389474,2.13162821e-14 19.4736842,2.43473684 19.4736842,9.73684211 C19.4736842,17.0389474 17.0389474,19.4736842 9.73684211,19.4736842 C2.43473684,19.4736842 -3.55271368e-14,17.0389474 -3.55271368e-14,9.73684211 Z'>
+                                                    </path>
+                                                </g>
+                                            </svg>
                                         </a>
                                         {{-- <a href="/barangmasuk/edit/{{ $d->barang_masuk_id }}"
                                             class="flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center"
@@ -103,17 +116,34 @@
                                         <a href="/barangmasuk/delete/{{ $d->barang_masuk_id }}"
                                             class="flex text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center"
                                             type="button">
-                                            <svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' stroke="white" stroke-width="2" fill="none" width="18" height="18"><g transform='translate(3.500000, 2.000000)'><path d='M15.3891429,7.55409524 C15.3891429,15.5731429 16.5434286,19.1979048 8.77961905,19.1979048 C1.01485714,19.1979048 2.19295238,15.5731429 2.19295238,7.55409524'></path><line x1='16.8651429' y1='4.47980952' x2='0.714666667' y2='4.47980952'></line><path d='M12.2148571,4.47980952 C12.2148571,4.47980952 12.7434286,0.714095238 8.78914286,0.714095238 C4.83580952,0.714095238 5.36438095,4.47980952 5.36438095,4.47980952'></path></g></svg>
+                                            <svg class='line' xmlns='http://www.w3.org/2000/svg'
+                                                viewBox='0 0 24 24' stroke="white" stroke-width="2" fill="none"
+                                                width="18" height="18">
+                                                <g transform='translate(3.500000, 2.000000)'>
+                                                    <path
+                                                        d='M15.3891429,7.55409524 C15.3891429,15.5731429 16.5434286,19.1979048 8.77961905,19.1979048 C1.01485714,19.1979048 2.19295238,15.5731429 2.19295238,7.55409524'>
+                                                    </path>
+                                                    <line x1='16.8651429' y1='4.47980952' x2='0.714666667'
+                                                        y2='4.47980952'></line>
+                                                    <path
+                                                        d='M12.2148571,4.47980952 C12.2148571,4.47980952 12.7434286,0.714095238 8.78914286,0.714095238 C4.83580952,0.714095238 5.36438095,4.47980952 5.36438095,4.47980952'>
+                                                    </path>
+                                                </g>
+                                            </svg>
                                         </a>
                                     </td>
                                 </tr>
 
-                                <div class="modal fade" id="detailModal{{ $d->barang_masuk_id }}" tabindex="-1" aria-labelledby="detailModalLabel{{ $d->barang_masuk_id }}" aria-hidden="true">
+                                <div class="modal fade" id="detailModal{{ $d->barang_masuk_id }}" tabindex="-1"
+                                    aria-labelledby="detailModalLabel{{ $d->barang_masuk_id }}" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="detailModalLabel{{ $d->barang_masuk_id }}">Detail Barang Masuk</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <h5 class="modal-title"
+                                                    id="detailModalLabel{{ $d->barang_masuk_id }}">Detail Barang Masuk
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="grid grid-cols-10 gap-2">
@@ -133,12 +163,13 @@
                                                     <!-- Detail barang -->
                                                     @foreach ($d->detail as $index => $detail)
                                                         <hr class="col-span-10 my-2">
-                                                        <div class="font-bold col-span-3">Barang {{ $index + 1 }}:</div>
-                                                        <div class="col-span-7">
-                                                            <div class="font-bold">SN / Kondisi</div>
-                                                            <div class="ml-5">{{ $detail->serial_number }} — {{ $detail->status_barang }}</div>
-                                                            <div class="font-bold">Kelengkapan</div>
-                                                            <div class="ml-5">{{ $detail->kelengkapan }}</div>
+                                                        <div class="font-bold col-span-3">Barang {{ $index + 1 }}
+                                                        </div>
+                                                        <div class="col-span-7">{{ $detail->serial_number }} — <span
+                                                                style="color:{{ $detail->warna_status_barang }}">{{ $detail->status_barang }}</span>
+                                                        </div>
+                                                        <div class="col-span-3">Kelengkapan</div>
+                                                        <div class="col-span-7">{{ $detail->kelengkapan ?: '—' }}
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -218,7 +249,8 @@
                             <h1
                                 class="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-primary-600 dark:text-primary-500">
                                 404</h1>
-                            <p class="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl dark:text-white">
+                            <p
+                                class="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl dark:text-white">
                                 Data tidak ditemukan.</p>
                         </div>
                     </div>

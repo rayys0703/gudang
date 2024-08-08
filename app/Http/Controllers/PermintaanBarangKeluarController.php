@@ -32,11 +32,11 @@ class PermintaanBarangKeluarController extends Controller
 			->when($search, function ($query) use ($search) {
 				return $query->where('customer.nama', 'like', '%' . $search . '%')
 					->orWhere('keperluan.nama', 'like', '%' . $search . '%')
-					->orWhere('customer.nama', 'like', '%' . $search . '%')
 					->orWhere('permintaan_barang_keluar.jumlah', 'like', '%' . $search . '%')
+					->orWhere('permintaan_barang_keluar.status', 'like', '%' . $search . '%')
 					->orWhere('permintaan_barang_keluar.tanggal_awal', 'like', '%' . $search . '%');
 			})
-			->orderBy('permintaan_barang_keluar.tanggal_awal', 'desc')
+			->orderBy('permintaan_barang_keluar.created_at', 'desc')
 			->orderBy('permintaan_barang_keluar.status', 'asc')
 			->paginate(7);
 

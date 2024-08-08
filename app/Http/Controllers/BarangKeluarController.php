@@ -31,7 +31,6 @@ class BarangKeluarController extends Controller
             ->when($search, function ($query) use ($search) {
                 return $query->where('customer.nama', 'like', '%' . $search . '%')
 					->orWhere('keperluan.nama', 'like', '%' . $search . '%')
-					->orWhere('customer.nama', 'like', '%' . $search . '%')
 					->orWhere('permintaan_barang_keluar.jumlah', 'like', '%' . $search . '%')
 					->orWhere('barang_keluar.tanggal', 'like', '%' . $search . '%');
             })

@@ -132,12 +132,17 @@
                                                     <!-- Detail permintaan -->
                                                     @foreach ($d->detail as $index => $detail)
                                                         <hr class="col-span-10 my-2">
-                                                        <div class="font-bold col-span-3">Barang / SN</div>
-                                                        <div class="col-span-7">{{ $detail->nama_barang }} — {{ $detail->serial_number }}</div>
-                                                        <div class="font-bold col-span-3">Jenis Barang</div>
-                                                        <div class="col-span-7">{{ $detail->nama_jenis_barang }}</div>
-                                                        <div class="font-bold col-span-3">Supplier</div>
-                                                        <div class="col-span-7">{{ $detail->nama_supplier }}</div>
+                                                        <div class="col-span-1 flex items-center justify-center">
+                                                            <div class="font-bold">{{ $index + 1 }}</div>
+                                                        </div>
+                                                        <div class="col-span-9 grid grid-cols-10">
+                                                            <div class="font-bold col-span-3">Barang / SN</div>
+                                                            <div class="col-span-7">{{ $detail->nama_barang }} — {{ $detail->serial_number }}</div>
+                                                            <div class="font-bold col-span-3">Jenis Barang</div>
+                                                            <div class="col-span-7">{{ $detail->nama_jenis_barang }}</div>
+                                                            <div class="font-bold col-span-3">Supplier</div>
+                                                            <div class="col-span-7">{{ $detail->nama_supplier }}</div>
+                                                        </div>
                                                     @endforeach
                                                 </div>
                                             </div>

@@ -114,7 +114,7 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title"
-                                                    id="detailModalLabel{{ $d->barang_id }}">Detail Barang Masuk
+                                                    id="detailModalLabel{{ $d->barang_id }}">Detail Stok Barang
                                                 </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
@@ -127,25 +127,18 @@
                                                     <div class="col-span-7">{{ $d->nama_jenis_barang }}</div>
                                                     <div class="font-bold col-span-3">Supplier:</div>
                                                     <div class="col-span-7">{{ $d->nama_supplier }}</div>
-                                                    <div class="font-bold col-span-3">Tanggal Masuk:</div>
-                                                    <div class="col-span-7">{{ $d->formatted_tanggal }}</div>
+                                                    {{-- <div class="font-bold col-span-3">Tanggal Masuk:</div>
+                                                    <div class="col-span-7">{{ $d->tanggal }}</div> --}}
                                                     <div class="font-bold col-span-3">Jumlah:</div>
                                                     <div class="col-span-7">{{ $d->jumlah }}</div>
 
                                                     <!-- Detail barang -->
                                                     @foreach ($d->detail as $index => $detail)
                                                         <hr class="col-span-10 my-2">
-                                                        <div class="font-bold col-span-3">Barang {{ $index + 1 }}:
-                                                        </div>
-                                                        <div class="col-span-7">
-                                                            <div class="font-bold">SN / Kondisi</div>
-                                                            <div class="ml-5">{{ $detail->serial_number }} —
-                                                                {{ $detail->status_barang }}</div>
-                                                            @if ($detail->kelengkapan)
-                                                                <div class="font-bold">Kelengkapan</div>
-                                                                <div class="ml-5">{{ $detail->kelengkapan }}</div>
-                                                            @endif                                                            
-                                                        </div>
+                                                        <div class="font-bold col-span-3">Barang {{ $index + 1 }}</div>
+                                                        <div class="col-span-7">{{ $detail->serial_number }} — <span style="color:{{ $detail->warna_status_barang }}">{{ $detail->status_barang }}</span></div>
+                                                        <div class="col-span-3">Kelengkapan</div>
+                                                        <div class="col-span-7">{{ $detail->kelengkapan ? : '—' }}</div>
                                                     @endforeach
                                                 </div>
                                             </div>
