@@ -74,15 +74,17 @@
                             </div>
                         </div>
                     </form>
+
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                         <thead class="text-xs text-gray-700 uppercase bg-white">
                             <tr>
-                                <th scope="col" class="px-6 py-3 justify-center flex">No</th>
-                                <th scope="col" class="px-6 py-3">Serial Number</th>
-                                <th scope="col" class="px-6 py-3">Barang</th>
+                                <th scope="col" class="px-6 py-3">
+                                    <input type="checkbox" id="select-all">
+                                </th>
+                                <th scope="col" class="px-6 py-3">No</th>
                                 <th scope="col" class="px-6 py-3">Penerima</th>
                                 <th scope="col" class="px-6 py-3">Keperluan</th>
-                                {{-- <th scope="col" class="px-6 py-3">Keterangan</th> --}}
+                                <th scope="col" class="px-6 py-3">Jumlah</th>
                                 <th scope="col" class="px-6 py-3">Tanggal</th>
                                 <th scope="col" class="px-6 py-3">Aksi</th>
                             </tr>
@@ -90,26 +92,27 @@
                         <tbody>
                             @foreach ($data as $d)
                                 <tr class="bg-white border-b hover:bg-gray-50 text-base text-black">
-                                    <td class="px-6 py-4 justify-center flex">{{ $loop->iteration }}</td>
-                                    <td class="px-6 py-4">{{ $d->serial_number }}</td>
-                                    <td class="px-6 py-4">{{ $d->nama_barang }}</td>
+                                    <td class="w-4 px-6 py-4">
+                                        <input type="checkbox" class="select-item flex justify-center items-center"
+                                            value="{{ $d->id }}">
+                                    </td>
+                                    <td class="px-6 py-4">{{ $loop->iteration }}</td>
                                     <td class="px-6 py-4">{{ $d->nama_customer }}</td>
                                     <td class="px-6 py-4">{{ $d->nama_keperluan }}</td>
-                                    {{-- <td class="px-6 py-4">{{ $d->keterangan }}</td> --}}
+                                    <td class="px-6 py-4">{{ $d->jumlah }}</td>
                                     <td class="px-6 py-4">{{ $d->tanggal }}</td>
                                     <td class="px-6 py-4 flex gap-x-2">
+                        
                                         <button type="button"
                                             class="flex text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-2xl text-sm px-3 py-1.5 text-center"
                                             data-bs-toggle="modal" data-bs-target="#detailModal{{ $d->id }}">
-                                            <svg class='line' xmlns='http://www.w3.org/2000/svg'
-                                                viewBox='0 0 24 24' stroke="white" stroke-width="2" fill="none"
-                                                width="18" height="18">
+                                            <svg class='line' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'
+                                                stroke="white" stroke-width="2" fill="none" width="18"
+                                                height="18">
                                                 <g transform='translate(3.649800, 2.749900)'>
-                                                    <line x1='10.6555' y1='12.6999' x2='5.2555'
-                                                        y2='12.6999'>
+                                                    <line x1='10.6555' y1='12.6999' x2='5.2555' y2='12.6999'>
                                                     </line>
-                                                    <line x1='8.6106' y1='8.6886' x2='5.2546'
-                                                        y2='8.6886'>
+                                                    <line x1='8.6106' y1='8.6886' x2='5.2546' y2='8.6886'>
                                                     </line>
                                                     <path
                                                         d='M16.51,5.55 L10.84,0.15 C10.11,0.05 9.29,0 8.39,0 C2.1,0 -1.95399252e-14,2.32 -1.95399252e-14,9.25 C-1.95399252e-14,16.19 2.1,18.5 8.39,18.5 C14.69,18.5 16.79,16.19 16.79,9.25 C16.79,7.83 16.7,6.6 16.51,5.55 Z'>
@@ -122,47 +125,48 @@
                                         </button>
                                     </td>
                                 </tr>
-
-                                <!-- Modal -->
-                                <div class="modal fade" id="detailModal{{ $d->id }}" tabindex="-1"
-                                    aria-labelledby="detailModalLabel{{ $d->id }}" aria-hidden="true">
+                        
+                                <div class="modal fade" id="detailModal{{ $d->id }}" tabindex="-1" aria-labelledby="detailModalLabel{{ $d->id }}" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="detailModalLabel{{ $d->id }}">
-                                                    Detail Barang Keluar</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
+                                                <h5 class="modal-title" id="detailModalLabel{{ $d->id }}">Detail Barang Keluar</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="grid grid-cols-10 gap-2">
-                                                    <div class="font-bold col-span-3">Serial Number:</div>
-                                                    <div class="col-span-7">{{ $d->serial_number }}</div>
-                                                    <div class="font-bold col-span-3">Nama Barang:</div>
-                                                    <div class="col-span-7">{{ $d->nama_barang }}</div>
-                                                    <div class="font-bold col-span-3">Jenis Barang:</div>
-                                                    <div class="col-span-7">{{ $d->nama_jenis_barang }}</div>
-                                                    <div class="font-bold col-span-3">Supplier:</div>
-                                                    <div class="col-span-7">{{ $d->nama_supplier }}</div>
                                                     <div class="font-bold col-span-3">Penerima:</div>
                                                     <div class="col-span-7">{{ $d->nama_customer }}</div>
                                                     <div class="font-bold col-span-3">Keperluan:</div>
                                                     <div class="col-span-7">{{ $d->nama_keperluan }}</div>
                                                     <div class="font-bold col-span-3">Tanggal:</div>
                                                     <div class="col-span-7">{{ $d->tanggal }}</div>
-                                                    {{-- <div class="font-bold col-span-3">Keterangan:</div>
-                                                    <div class="col-span-7">{{ $d->keterangan }}</div> --}}
+                                                    <div class="font-bold col-span-3">Keterangan:</div>
+                                                    <div class="col-span-7">{{ $d->keterangan }}</div>
+                                                    <div class="font-bold col-span-3">Jumlah:</div>
+                                                    <div class="col-span-7">{{ $d->jumlah }}</div>
+                        
+                                                    <!-- Detail permintaan -->
+                                                    @foreach ($d->detail as $index => $detail)
+                                                        <hr class="col-span-10 my-2">
+                                                        <div class="font-bold col-span-3">Barang / SN</div>
+                                                        <div class="col-span-7">{{ $detail->nama_barang }} — {{ $detail->serial_number }}</div>
+                                                        <div class="font-bold col-span-3">Jenis Barang</div>
+                                                        <div class="col-span-7">{{ $detail->nama_jenis_barang }}</div>
+                                                        <div class="font-bold col-span-3">Supplier</div>
+                                                        <div class="col-span-7">{{ $detail->nama_supplier }}</div>
+                                                    @endforeach
                                                 </div>
                                             </div>
-                                            <div class="modal-footer gap-x-3">
-                                                <button type="button" class="!hidden btn btn-secondary"
-                                                    data-bs-dismiss="modal">Tutup</button>
-                                            </div>
+                                            {{-- <div class="modal-footer gap-x-3">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
                         </tbody>
+                        
 
                     </table>
 

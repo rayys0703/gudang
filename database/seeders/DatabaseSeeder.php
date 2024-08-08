@@ -128,5 +128,82 @@ class DatabaseSeeder extends Seeder
         }
 
         DB::table('barang')->insert($barang);
+
+        ///
+
+        $barang_masuk = [
+            [
+                'barang_id' => 1,
+                'jumlah' => 3,
+                'tanggal' => now(),
+                'created_at' => now(),
+            ],
+            [
+                'barang_id' => 2,
+                'jumlah' => 1,
+                'tanggal' => now(),
+                'created_at' => now(),
+            ],
+        ];
+
+        DB::table('barang_masuk')->insert($barang_masuk);
+
+        ///
+
+        $serial_number = [
+            [
+                'serial_number' => 100100,
+                'barangmasuk_id' => 1,
+                'created_at' => now(),
+            ],
+            [
+                'serial_number' => 100200,
+                'barangmasuk_id' => 1,
+                'created_at' => now(),
+            ],
+            [
+                'serial_number' => 100300,
+                'barangmasuk_id' => 1,
+                'created_at' => now(),
+            ],
+            [
+                'serial_number' => 200100,
+                'barangmasuk_id' => 2,
+                'created_at' => now(),
+            ],
+        ];
+
+        DB::table('serial_number')->insert($serial_number);
+
+        ///
+
+        $detail_barang_masuk = [
+            [
+                'barangmasuk_id' => 1,
+                'serial_number_id' => 1,
+                'status_barang_id' => 1,
+                'created_at' => now(),
+            ],
+            [
+                'barangmasuk_id' => 1,
+                'serial_number_id' => 2,
+                'status_barang_id' => 1,
+                'created_at' => now(),
+            ],
+            [
+                'barangmasuk_id' => 1,
+                'serial_number_id' => 3,
+                'status_barang_id' => 2,
+                'created_at' => now(),
+            ],
+            [
+                'barangmasuk_id' => 2,
+                'serial_number_id' => 4,
+                'status_barang_id' => 1,
+                'created_at' => now(),
+            ],
+        ];
+
+        DB::table('detail_barang_masuk')->insert($detail_barang_masuk);
     }
 }

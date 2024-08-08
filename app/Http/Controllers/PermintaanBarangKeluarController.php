@@ -20,35 +20,49 @@ class PermintaanBarangKeluarController extends Controller
 
 		$data = DB::table('permintaan_barang_keluar')
 			->leftJoin('customer', 'permintaan_barang_keluar.customer_id', '=', 'customer.id')
-			->leftJoin('detail_permintaan_bk', 'permintaan_barang_keluar.id', '=', 'detail_permintaan_bk.permintaan_barang_keluar_id')
-			->leftJoin('serial_number', 'detail_permintaan_bk.serial_number_id', '=', 'serial_number.id')
-			->leftJoin('barang_masuk', 'serial_number.barangmasuk_id', '=', 'barang_masuk.id')
-			->leftJoin('barang', 'barang_masuk.barang_id', '=', 'barang.id')
-			->leftJoin('jenis_barang', 'barang.jenis_barang_id', '=', 'jenis_barang.id')
-			->leftJoin('supplier', 'barang.supplier_id', '=', 'supplier.id')
 			->leftJoin('keperluan', 'permintaan_barang_keluar.keperluan_id', '=', 'keperluan.id')
 			->select(
 				'permintaan_barang_keluar.*',
-				'serial_number.serial_number as serial_number',
 				'customer.nama as nama_customer',
-				'barang.nama as nama_barang',
 				'keperluan.nama as nama_keperluan',
-				'jenis_barang.nama as nama_jenis_barang',
-				'supplier.nama as nama_supplier'
+				'permintaan_barang_keluar.id as permintaan_barang_keluar_id',
+                'permintaan_barang_keluar.jumlah'
 			)
 			->selectRaw("DATE_FORMAT(permintaan_barang_keluar.tanggal_awal, '%d %M %Y') as tanggal")
 			->when($search, function ($query) use ($search) {
-				return $query->where('permintaan_barang_keluar.status', 'like', '%' . $search . '%')
-					->orWhere('barang.nama', 'like', '%' . $search . '%')
-					->orWhere('customer.nama', 'like', '%' . $search . '%')
+				return $query->where('customer.nama', 'like', '%' . $search . '%')
 					->orWhere('keperluan.nama', 'like', '%' . $search . '%')
-					->orWhere('serial_number.serial_number', 'like', '%' . $search . '%')
-					->orWhere('jenis_barang.nama', 'like', '%' . $search . '%')
-					->orWhere('supplier.nama', 'like', '%' . $search . '%');
+					->orWhere('customer.nama', 'like', '%' . $search . '%')
+					->orWhere('permintaan_barang_keluar.jumlah', 'like', '%' . $search . '%')
+					->orWhere('permintaan_barang_keluar.tanggal_awal', 'like', '%' . $search . '%');
 			})
 			->orderBy('permintaan_barang_keluar.tanggal_awal', 'desc')
 			->orderBy('permintaan_barang_keluar.status', 'asc')
 			->paginate(7);
+
+		foreach ($data as $item) {
+			$item->detail = DB::table('detail_permintaan_bk')
+				->leftJoin('serial_number', 'detail_permintaan_bk.serial_number_id', '=', 'serial_number.id')
+				->leftJoin('barang_masuk', 'serial_number.barangmasuk_id', '=', 'barang_masuk.id')
+				->leftJoin('barang', 'barang_masuk.barang_id', '=', 'barang.id')
+				->leftJoin('jenis_barang', 'barang.jenis_barang_id', '=', 'jenis_barang.id')
+				->leftJoin('supplier', 'barang.supplier_id', '=', 'supplier.id')
+				->select(
+					'serial_number.serial_number', 
+					'barang.nama as nama_barang', 
+					'jenis_barang.nama as nama_jenis_barang', 
+					'supplier.nama as nama_supplier'
+				)
+				->where('detail_permintaan_bk.permintaan_barang_keluar_id', $item->permintaan_barang_keluar_id)
+				->orderBy('serial_number.serial_number', 'asc')
+				->get();
+		}
+
+		// Format tanggal untuk tampilan
+        $data->getCollection()->transform(function ($item) {
+            $item->tanggal = \Carbon\Carbon::parse($item->tanggal)->isoFormat('DD MMMM YYYY');
+            return $item;
+        });
 
 		return view('permintaanbarangkeluar.index', compact('data'));
 	}

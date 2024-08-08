@@ -29,7 +29,11 @@ class BarangKeluarController extends Controller
             )
             ->selectRaw("DATE_FORMAT(barang_keluar.tanggal, '%d %M %Y') as formatted_tanggal")
             ->when($search, function ($query) use ($search) {
-                return $query->where('customer.nama', 'like', '%' . $search . '%');
+                return $query->where('customer.nama', 'like', '%' . $search . '%')
+					->orWhere('keperluan.nama', 'like', '%' . $search . '%')
+					->orWhere('customer.nama', 'like', '%' . $search . '%')
+					->orWhere('permintaan_barang_keluar.jumlah', 'like', '%' . $search . '%')
+					->orWhere('barang_keluar.tanggal', 'like', '%' . $search . '%');
             })
             ->orderBy('barang_keluar.created_at', 'desc')
             ->paginate(7);

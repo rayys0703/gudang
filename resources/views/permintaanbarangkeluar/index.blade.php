@@ -46,11 +46,10 @@
                                     <input type="checkbox" id="select-all">
                                 </th>
                                 <th scope="col" class="px-6 py-3">No</th>
-                                <th scope="col" class="px-6 py-3">Serial Number</th>
-                                <th scope="col" class="px-6 py-3">Barang</th>
                                 <th scope="col" class="px-6 py-3">Penerima</th>
                                 <th scope="col" class="px-6 py-3">Keperluan</th>
                                 {{-- <th scope="col" class="px-6 py-3">Keterangan</th> --}}
+                                <th scope="col" class="px-6 py-3">Jumlah Permintaan</th>
                                 <th scope="col" class="px-6 py-3">Tanggal</th>
                                 <th scope="col" class="px-6 py-3">Status</th>
                                 <th scope="col" class="px-6 py-3">Aksi</th>
@@ -63,10 +62,9 @@
                                         <input type="checkbox" class="select-item flex justify-center items-center" value="{{ $d->id }}">
                                     </td>
                                     <td class="px-6 py-4">{{ $loop->iteration }}</td>
-                                    <td class="px-6 py-4">{{ $d->serial_number }}</td>
-                                    <td class="px-6 py-4">{{ $d->nama_barang }}</td>
                                     <td class="px-6 py-4">{{ $d->nama_customer }}</td>
                                     <td class="px-6 py-4">{{ $d->nama_keperluan }}</td>
+                                    <td class="px-6 py-4">{{ $d->jumlah }}</td>
                                     <td class="px-6 py-4">{{ $d->tanggal }}</td>
                                     <td class="px-6 py-4">
                                         @if ($d->status == 'Ditolak')
@@ -134,22 +132,16 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="grid grid-cols-10 gap-2">
-                                                    <div class="font-bold col-span-3">Serial Number:</div>
-                                                    <div class="col-span-7">{{ $d->serial_number }}</div>
-                                                    <div class="font-bold col-span-3">Nama Barang:</div>
-                                                    <div class="col-span-7">{{ $d->nama_barang }}</div>
-                                                    <div class="font-bold col-span-3">Jenis Barang:</div>
-                                                    <div class="col-span-7">{{ $d->nama_jenis_barang }}</div>
-                                                    <div class="font-bold col-span-3">Supplier:</div>
-                                                    <div class="col-span-7">{{ $d->nama_supplier }}</div>
                                                     <div class="font-bold col-span-3">Penerima:</div>
                                                     <div class="col-span-7">{{ $d->nama_customer }}</div>
                                                     <div class="font-bold col-span-3">Keperluan:</div>
                                                     <div class="col-span-7">{{ $d->nama_keperluan }}</div>
-                                                    <div class="font-bold col-span-3">Keterangan:</div>
-                                                    <div class="col-span-7">{{ $d->keterangan }}</div>
                                                     <div class="font-bold col-span-3">Tanggal:</div>
                                                     <div class="col-span-7">{{ $d->tanggal }}</div>
+                                                    <div class="font-bold col-span-3">Keterangan:</div>
+                                                    <div class="col-span-7">{{ $d->keterangan }}</div>
+                                                    <div class="font-bold col-span-3">Jumlah:</div>
+                                                    <div class="col-span-7">{{ $d->jumlah }}</div>
                                                     <div class="font-bold col-span-3">Status:</div>
                                                     <div class="col-span-7">
                                                         @if ($d->status == 'Ditolak')
@@ -162,6 +154,17 @@
                                                             {{ $d->status }}
                                                         @endif
                                                     </div>
+
+                                                    <!-- Detail permintaan -->
+                                                    @foreach ($d->detail as $index => $detail)
+                                                        <hr class="col-span-10 my-2">
+                                                        <div class="font-bold col-span-3">Barang / SN</div>
+                                                        <div class="col-span-7">{{ $detail->nama_barang }} — {{ $detail->serial_number }}</div>
+                                                        <div class="font-bold col-span-3">Jenis Barang</div>
+                                                        <div class="col-span-7">{{ $detail->nama_jenis_barang }}</div>
+                                                        <div class="font-bold col-span-3">Supplier</div>
+                                                        <div class="col-span-7">{{ $detail->nama_supplier }}</div>
+                                                    @endforeach
                                                 </div>
                                             </div>
                                             <div class="modal-footer gap-x-3">
