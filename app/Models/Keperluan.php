@@ -11,5 +11,10 @@ class Keperluan extends Model
 
     protected $table = "keperluan";
 
-    protected $fillable = ['nama'];
+    protected $fillable = [
+        'nama',
+        'nama_tanggal_awal',
+        'nama_tanggal_akhir',
+        'extend'
+    ];
 }

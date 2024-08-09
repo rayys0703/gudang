@@ -33,15 +33,26 @@ class KeperluanController extends Controller
 	public function store(Request $request): RedirectResponse
 	{
 		$request->validate([
-			'nama' => 'required|string|max:255',
+			'nama' => 'required|string|max:30',
+			'nama_tanggal_awal' => 'nullable|string|max:30',
+			'nama_tanggal_akhir' => 'nullable|string|max:30',
+			'extend' => 'nullable|boolean',
 		], [
 			'nama.required' => 'Nama jenis barang harus diisi.',
 			'nama.string' => 'Nama jenis barang harus berupa teks.',
-			'nama.max' => 'Nama jenis barang tidak boleh lebih dari 255 karakter.',
+			'nama.max' => 'Nama jenis barang tidak boleh lebih dari 30 karakter.',
+			'nama_tanggal_awal.string' => 'Nama tanggal awal harus berupa teks.',
+			'nama_tanggal_awal.max' => 'Nama tanggal awal tidak boleh lebih dari 30 karakter.',
+			'nama_tanggal_akhir.string' => 'Nama tanggal akhir harus berupa teks.',
+			'nama_tanggal_akhir.max' => 'Nama tanggal akhir tidak boleh lebih dari 30 karakter.',
+			'extend.boolean' => 'Extend harus berupa nilai boolean (false/true).',
 		]);
 
 		$data = Keperluan::create([
 			'nama' => $request->nama,
+			'nama_tanggal_awal' => $request->nama_tanggal_awal,
+			'nama_tanggal_akhir' => $request->nama_tanggal_akhir,
+			'extend' => $request->extend ?? 0,
 		]);
 
 		return redirect('/keperluan')->with('success', 'Anda berhasil menambahkan data!');
@@ -56,16 +67,27 @@ class KeperluanController extends Controller
 	public function update($id, Request $request): RedirectResponse
 	{
 		$request->validate([
-			'nama' => 'required|string|max:255',
+			'nama' => 'required|string|max:30',
+			'nama_tanggal_awal' => 'nullable|string|max:30',
+			'nama_tanggal_akhir' => 'nullable|string|max:30',
+			'extend' => 'nullable|boolean',
 		], [
 			'nama.required' => 'Nama jenis barang harus diisi.',
 			'nama.string' => 'Nama jenis barang harus berupa teks.',
-			'nama.max' => 'Nama jenis barang tidak boleh lebih dari 255 karakter.',
+			'nama.max' => 'Nama jenis barang tidak boleh lebih dari 30 karakter.',
+			'nama_tanggal_awal.string' => 'Nama tanggal awal harus berupa teks.',
+			'nama_tanggal_awal.max' => 'Nama tanggal awal tidak boleh lebih dari 30 karakter.',
+			'nama_tanggal_akhir.string' => 'Nama tanggal akhir harus berupa teks.',
+			'nama_tanggal_akhir.max' => 'Nama tanggal akhir tidak boleh lebih dari 30 karakter.',
+			'extend.boolean' => 'Extend harus berupa nilai boolean (false/true).',
 		]);
 
 		$data = Keperluan::find($id);
 
 		$data->nama = $request->nama;
+		$data->nama_tanggal_awal = $request->nama_tanggal_awal;
+		$data->nama_tanggal_akhir = $request->nama_tanggal_akhir;
+		$data->extend = $request->extend ?? 0;
 		$data->save();
 
 		return redirect('/keperluan')->with('success', 'Anda berhasil memperbarui data!');

@@ -52,6 +52,9 @@
                                     Keperluan
                                 </th>
                                 <th scope="col" class="px-6 py-3">
+                                    Dua Tanggal?
+                                </th>
+                                <th scope="col" class="px-6 py-3">
                                     Aksi
                                 </th>
                             </tr>
@@ -71,8 +74,10 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="text-base text-black gap-3 flex items-center">{{ $d->nama }}
-                                        </div>
+                                        <div class="text-base text-black gap-3 flex items-center">{{ $d->nama }}</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-base text-black gap-3 flex items-center">{{ $d->extend ? 'Iya' : 'Tidak' }}</div>
                                     </td>
                                     <td class="px-6 py-4 flex gap-x-2">
                                         <a href="/keperluan/edit/{{ $d->id }}"

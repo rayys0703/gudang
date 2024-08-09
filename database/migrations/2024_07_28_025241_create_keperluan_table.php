@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('keperluan', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
+            $table->boolean('extend')->default(false);
+            $table->string('nama_tanggal_awal')->nullable()->default('Tanggal');
+            $table->string('nama_tanggal_akhir')->nullable()->default('Tanggal');
             $table->timestamps();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();

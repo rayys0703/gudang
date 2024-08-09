@@ -135,10 +135,15 @@
                                                     <!-- Detail barang -->
                                                     @foreach ($d->detail as $index => $detail)
                                                         <hr class="col-span-10 my-2">
-                                                        <div class="font-bold col-span-3">Barang {{ $index + 1 }}</div>
-                                                        <div class="col-span-7">{{ $detail->serial_number }} — <span style="color:{{ $detail->warna_status_barang }}">{{ $detail->status_barang }}</span></div>
-                                                        <div class="col-span-3">Kelengkapan</div>
-                                                        <div class="col-span-7">{{ $detail->kelengkapan ? : '—' }}</div>
+                                                        <div class="col-span-1 flex items-center justify-center">
+                                                            <div class="font-bold">{{ $index + 1 }}</div>
+                                                        </div>
+                                                        <div class="col-span-9 grid grid-cols-10">
+                                                            <div class="font-bold col-span-3">SN / Kondisi</div>
+                                                            <div class="col-span-7">{{ $detail->serial_number }} — <span style="color:{{ $detail->warna_status_barang }}">{{ $detail->status_barang }}</span></div>
+                                                            <div class="font-bold col-span-3">Kelengkapan</div>
+                                                            <div class="col-span-7">{{ $detail->kelengkapan ? : '—' }}</div>
+                                                        </div>
                                                     @endforeach
                                                 </div>
                                             </div>

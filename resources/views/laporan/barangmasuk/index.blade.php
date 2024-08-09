@@ -77,10 +77,10 @@
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                         <thead class="text-xs text-gray-700 uppercase bg-white">
                             <tr>
-                                <th scope="col" class="px-6 py-3">
+                                {{-- <th scope="col" class="px-6 py-3">
                                     <input type="checkbox" id="select-all">
-                                </th>
-                                <th scope="col" class="px-6 py-3">No</th>
+                                </th> --}}
+                                <th scope="col" class="px-6 py-3 flex justify-center items-center">No</th>
                                 {{-- <th scope="col" class="px-6 py-3">Serial Number</th> --}}
                                 <th scope="col" class="px-6 py-3">Barang</th>
                                 <th scope="col" class="px-6 py-3">Jumlah</th>
@@ -93,11 +93,11 @@
                         <tbody>
                             @foreach ($data as $d)
                                 <tr class="bg-white border-b hover:bg-gray-50 text-base text-black">
-                                    <td class="w-4 px-6 py-4">
+                                    {{-- <td class="w-4 px-6 py-4">
                                         <input type="checkbox" class="select-item flex justify-center items-center"
                                             value="{{ $d->barang_masuk_id }}">
-                                    </td>
-                                    <td class="px-6 py-4">{{ $loop->iteration }}</td>
+                                    </td> --}}
+                                    <td class="px-6 py-4 flex justify-center items-center">{{ $loop->iteration }}</td>
                                     {{-- <td class="px-6 py-4">{{ $d->serial_number }}</td> --}}
                                     <td class="px-6 py-4">{{ $d->nama_barang }}</td>
                                     <td class="px-6 py-4">{{ $d->jumlah ?: 0 }}</td>
