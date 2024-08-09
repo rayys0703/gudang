@@ -40,7 +40,11 @@
                                 class="select2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 <option selected>Pilih keperluan</option>
                                 @foreach ($keperluan as $d)
-                                    <option value="{{ $d->id }}">{{ $d->nama }}</option>
+                                    <option value="{{ $d->id }}" data-extend="{{ $d->extend }}"
+                                        data-tanggal-awal="{{ $d->nama_tanggal_awal }}"
+                                        data-tanggal-akhir="{{ $d->nama_tanggal_akhir }}">
+                                        {{ $d->nama }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -51,10 +55,19 @@
                             class="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div class="mb-5">
-                        <label for="tanggal_awal" class="block mb-2 text-sm font-medium text-gray-900">Tanggal Permintaan</label>
+                        <label id="label-tanggal-awal" for="tanggal_awal"
+                            class="block mb-2 text-sm font-medium text-gray-900">Tanggal Permintaan</label>
                         <input type="date" id="tanggal_awal" name="tanggal_awal"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             value="{{ date('Y-m-d') }}" required />
+                    </div>
+
+                    <!-- Input Tanggal Akhir (Awalnya Disembunyikan) -->
+                    <div id="tanggal-akhir-container" class="mb-5 hidden">
+                        <label id="label-tanggal-akhir" for="tanggal_akhir"
+                            class="block mb-2 text-sm font-medium text-gray-900">Tanggal Akhir</label>
+                        <input type="date" id="tanggal_akhir" name="tanggal_akhir"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                     </div>
 
                     <div class="mb-5">
@@ -109,7 +122,8 @@
                                 </select>
                             </div>
                             <div class="mb-5">
-                                <label for="serialnumber_1" class="block mb-2 text-sm font-medium text-gray-900">Serial
+                                <label for="serialnumber_1"
+                                    class="block mb-2 text-sm font-medium text-gray-900">Serial
                                     Number</label>
                                 <select id="serialnumber_1" name="serial_numbers[]"
                                     class="select2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
@@ -124,6 +138,33 @@
                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
 
                 </form>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const keperluanSelect = document.getElementById('keperluan');
+                        const tanggalAkhirContainer = document.getElementById('tanggal-akhir-container');
+                        const labelTanggalAwal = document.getElementById('label-tanggal-awal');
+                        const labelTanggalAkhir = document.getElementById('label-tanggal-akhir');
+                        const tanggalAwalInput = document.getElementById('tanggal_awal');
+                        const tanggalAkhirInput = document.getElementById('tanggal_akhir');
+
+                        keperluanSelect.addEventListener('change', function() {
+                            const selectedOption = this.options[this.selectedIndex];
+                            const extend = selectedOption.getAttribute('data-extend');
+                            const namaTanggalAwal = selectedOption.getAttribute('data-tanggal-awal');
+                            const namaTanggalAkhir = selectedOption.getAttribute('data-tanggal-akhir');
+
+                            if (extend == 1) {
+                                tanggalAkhirContainer.classList.remove('hidden');
+                                labelTanggalAwal.textContent = namaTanggalAwal;
+                                labelTanggalAkhir.textContent = namaTanggalAkhir;
+                            } else {
+                                tanggalAkhirContainer.classList.add('hidden');
+                                labelTanggalAwal.textContent = 'Tanggal Permintaan';
+                                labelTanggalAkhir.textContent = 'Tanggal Akhir';
+                            }
+                        });
+                    });
+                </script>
             </div>
         </div>
     </div>
@@ -177,6 +218,25 @@
                 $('.select2').on('select2:select', function(e) {
                     const selectElement = $(this);
                     const index = selectElement.attr('id').split('_').pop(); // Get the index from id
+                    
+                    const id = selectElement.attr('id');
+                    if (id === 'keperluan') {
+                        const selectedOption = selectElement.find(':selected');
+                        const extend = selectedOption.data('extend');
+                        const namaTanggalAwal = selectedOption.data('tanggal-awal');
+                        const namaTanggalAkhir = selectedOption.data('tanggal-akhir');
+
+                        // Menampilkan atau menyembunyikan input tanggal akhir
+                        if (extend == 1) {
+                            $('#tanggal-akhir-container').removeClass('hidden');
+                            $('#label-tanggal-awal').text(namaTanggalAwal);
+                            $('#label-tanggal-akhir').text(namaTanggalAkhir);
+                        } else {
+                            $('#tanggal-akhir-container').addClass('hidden');
+                            $('#label-tanggal-awal').text('Tanggal Permintaan');
+                            $('#label-tanggal-akhir').text('Tanggal Akhir');
+                        }
+                    }
 
                     if (selectElement.attr('id').startsWith('jenis_barang')) {
                         const jenisBarangId = e.params.data.id;
@@ -240,7 +300,7 @@
 
             incrementButton.addEventListener('click', function() {
                 if (parseInt(quantityInput.value, 10) < parseInt(quantityInput.dataset.inputCounterMax,
-                    10)) {
+                        10)) {
                     quantityInput.value = parseInt(quantityInput.value, 10) + 1;
                     updatePermintaanInputs();
                 }
@@ -248,7 +308,7 @@
 
             decrementButton.addEventListener('click', function() {
                 if (parseInt(quantityInput.value, 10) > parseInt(quantityInput.dataset.inputCounterMin,
-                    10)) {
+                        10)) {
                     quantityInput.value = parseInt(quantityInput.value, 10) - 1;
                     updatePermintaanInputs();
                 }

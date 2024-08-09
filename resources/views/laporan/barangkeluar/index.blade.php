@@ -85,7 +85,7 @@
                                 <th scope="col" class="px-6 py-3">Penerima</th>
                                 <th scope="col" class="px-6 py-3">Keperluan</th>
                                 <th scope="col" class="px-6 py-3">Jumlah</th>
-                                <th scope="col" class="px-6 py-3">Tanggal</th>
+                                <th scope="col" class="px-6 py-3">Tanggal Permintaan</th>
                                 <th scope="col" class="px-6 py-3">Aksi</th>
                             </tr>
                         </thead>

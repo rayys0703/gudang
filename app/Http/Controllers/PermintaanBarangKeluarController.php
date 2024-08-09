@@ -26,9 +26,11 @@ class PermintaanBarangKeluarController extends Controller
 				'customer.nama as nama_customer',
 				'keperluan.nama as nama_keperluan',
 				'permintaan_barang_keluar.id as permintaan_barang_keluar_id',
-                'permintaan_barang_keluar.jumlah'
+                'permintaan_barang_keluar.jumlah',
+				'keperluan.extend as extend'
 			)
-			->selectRaw("DATE_FORMAT(permintaan_barang_keluar.tanggal_awal, '%d %M %Y') as tanggal")
+			->selectRaw("DATE_FORMAT(permintaan_barang_keluar.tanggal_awal, '%d %M %Y') as tanggal_awal")
+			->selectRaw("DATE_FORMAT(permintaan_barang_keluar.tanggal_akhir, '%d %M %Y') as tanggal_akhir")
 			->when($search, function ($query) use ($search) {
 				return $query->where('customer.nama', 'like', '%' . $search . '%')
 					->orWhere('keperluan.nama', 'like', '%' . $search . '%')
@@ -60,7 +62,8 @@ class PermintaanBarangKeluarController extends Controller
 
 		// Format tanggal untuk tampilan
         $data->getCollection()->transform(function ($item) {
-            $item->tanggal = \Carbon\Carbon::parse($item->tanggal)->isoFormat('DD MMMM YYYY');
+            $item->tanggal_awal = \Carbon\Carbon::parse($item->tanggal_awal)->isoFormat('DD MMMM YYYY');
+            $item->tanggal_akhir = \Carbon\Carbon::parse($item->tanggal_akhir)->isoFormat('DD MMMM YYYY');
             return $item;
         });
 
@@ -82,7 +85,9 @@ class PermintaanBarangKeluarController extends Controller
 			->get();
 		
 		$customer = DB::table('customer')->select('id', 'nama')->orderBy('nama', 'asc')->get();
-		$keperluan = DB::table('keperluan')->select('id', 'nama')->orderBy('nama', 'asc')->get();
+		$keperluan = DB::table('keperluan')
+        ->select('id', 'nama', 'extend', 'nama_tanggal_awal', 'nama_tanggal_akhir')
+        ->orderBy('nama', 'asc')->get();
 
         return view('permintaanbarangkeluar.create', compact('barangMasuk', 'customer', 'barang', 'barangbyjenis', 'jenis_barang', 'jenis_barang_id', 'keperluan'));
 	}
@@ -122,6 +127,7 @@ class PermintaanBarangKeluarController extends Controller
 			'keperluan_id' => 'required|numeric',
 			'keterangan' => 'nullable|string|max:255',
 			'tanggal_awal' => 'required|date_format:Y-m-d',
+			'tanggal_akhir' => 'nullable|date_format:Y-m-d',
 		], [
 			'serial_numbers.required' => 'Serial Number harus diisi.',
 			'serial_numbers.array' => 'Serial Number harus berupa array.',
@@ -135,6 +141,7 @@ class PermintaanBarangKeluarController extends Controller
 			'keterangan.max' => 'Keterangan tidak boleh lebih dari 255 karakter.',
 			'tanggal_awal.required' => 'Tanggal harus diisi.',
 			'tanggal_awal.date_format' => 'Format tanggal harus YYYY-MM-DD.',
+			'tanggal_akhir.date_format' => 'Format tanggal harus YYYY-MM-DD.',
 		]);
 
 		// Hitung jumlah dari total serial number
@@ -147,6 +154,7 @@ class PermintaanBarangKeluarController extends Controller
 			'jumlah' => $jumlah,
 			'keterangan' => $request->keterangan,
 			'tanggal_awal' => $request->tanggal_awal,
+			'tanggal_akhir' => $request->tanggal_akhir ?? null,
 		]);
 
 		// Simpan detail_permintaan_bk
