@@ -122,8 +122,15 @@
                                                     <div class="col-span-7">{{ $d->nama_customer }}</div>
                                                     <div class="font-bold col-span-3">Keperluan:</div>
                                                     <div class="col-span-7">{{ $d->nama_keperluan }}</div>
-                                                    <div class="font-bold col-span-3">Tanggal:</div>
-                                                    <div class="col-span-7">{{ $d->tanggal }}</div>
+                                                    <hr class="col-span-10 my-2">
+                                                    <div class="font-bold col-span-10">Tanggal</div>
+                                                    <div class="font-bold col-span-3 ms-3">Permintaan:</div>
+                                                    <div class="col-span-7">{{ $d->tanggal_awal }}</div>
+                                                    @if ($d->extend)
+                                                        <div class="font-bold col-span-3 ms-3">Pengembalian:</div>
+                                                        <div class="col-span-7">{{ $d->tanggal_akhir }}</div>
+                                                    @endif
+                                                    <hr class="col-span-10 my-2">
                                                     <div class="font-bold col-span-3">Keterangan:</div>
                                                     <div class="col-span-7">{{ $d->keterangan }}</div>
                                                     <div class="font-bold col-span-3">Jumlah:</div>

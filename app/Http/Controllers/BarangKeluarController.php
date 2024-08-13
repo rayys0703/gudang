@@ -25,14 +25,16 @@ class BarangKeluarController extends Controller
                 'customer.nama as nama_customer', 
                 'keperluan.nama as nama_keperluan',
                 'permintaan_barang_keluar.id as permintaan_barang_keluar_id',
-                'permintaan_barang_keluar.jumlah'
+                'permintaan_barang_keluar.jumlah',
+                'keperluan.extend as extend'
             )
-            ->selectRaw("DATE_FORMAT(barang_keluar.tanggal, '%d %M %Y') as formatted_tanggal")
+            ->selectRaw("DATE_FORMAT(permintaan_barang_keluar.tanggal_awal, '%d %M %Y') as tanggal_awal")
+			->selectRaw("DATE_FORMAT(permintaan_barang_keluar.tanggal_akhir, '%d %M %Y') as tanggal_akhir")
             ->when($search, function ($query) use ($search) {
                 return $query->where('customer.nama', 'like', '%' . $search . '%')
 					->orWhere('keperluan.nama', 'like', '%' . $search . '%')
 					->orWhere('permintaan_barang_keluar.jumlah', 'like', '%' . $search . '%')
-					->orWhere('barang_keluar.tanggal', 'like', '%' . $search . '%');
+					->orWhere('barang_keluar.tanggal_awal', 'like', '%' . $search . '%');
             })
             ->orderBy('barang_keluar.created_at', 'desc')
             ->paginate(7);
@@ -57,7 +59,8 @@ class BarangKeluarController extends Controller
 
         // Format tanggal untuk tampilan
         $data->getCollection()->transform(function ($item) {
-            $item->tanggal = \Carbon\Carbon::parse($item->tanggal)->isoFormat('DD MMMM YYYY');
+            $item->tanggal_awal = \Carbon\Carbon::parse($item->tanggal_awal)->isoFormat('DD MMMM YYYY');
+            $item->tanggal_akhir = \Carbon\Carbon::parse($item->tanggal_akhir)->isoFormat('DD MMMM YYYY');
             return $item;
         });
 
