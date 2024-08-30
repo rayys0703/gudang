@@ -34,15 +34,16 @@ class KeperluanController extends Controller
 	{
 		$request->validate([
 			'nama' => 'required|string|max:30',
-			'nama_tanggal_awal' => 'nullable|string|max:30',
-			'nama_tanggal_akhir' => 'nullable|string|max:30',
+			//'nama_tanggal_awal' => 'required|string|max:30',
+			'nama_tanggal_akhir' => 'required|string|max:30',
 			'extend' => 'nullable|boolean',
 		], [
 			'nama.required' => 'Nama jenis barang harus diisi.',
 			'nama.string' => 'Nama jenis barang harus berupa teks.',
 			'nama.max' => 'Nama jenis barang tidak boleh lebih dari 30 karakter.',
-			'nama_tanggal_awal.string' => 'Nama tanggal awal harus berupa teks.',
-			'nama_tanggal_awal.max' => 'Nama tanggal awal tidak boleh lebih dari 30 karakter.',
+			//'nama_tanggal_awal.string' => 'Nama tanggal awal harus berupa teks.',
+			//'nama_tanggal_awal.max' => 'Nama tanggal awal tidak boleh lebih dari 30 karakter.',
+			'nama_tanggal_akhir.required' => 'Nama tanggal akhir harus diisi.',
 			'nama_tanggal_akhir.string' => 'Nama tanggal akhir harus berupa teks.',
 			'nama_tanggal_akhir.max' => 'Nama tanggal akhir tidak boleh lebih dari 30 karakter.',
 			'extend.boolean' => 'Extend harus berupa nilai boolean (false/true).',
@@ -50,7 +51,7 @@ class KeperluanController extends Controller
 
 		$data = Keperluan::create([
 			'nama' => $request->nama,
-			'nama_tanggal_awal' => $request->nama_tanggal_awal,
+			//'nama_tanggal_awal' => $request->nama_tanggal_awal,
 			'nama_tanggal_akhir' => $request->nama_tanggal_akhir,
 			'extend' => $request->extend ?? 0,
 		]);
@@ -68,15 +69,16 @@ class KeperluanController extends Controller
 	{
 		$request->validate([
 			'nama' => 'required|string|max:30',
-			'nama_tanggal_awal' => 'nullable|string|max:30',
-			'nama_tanggal_akhir' => 'nullable|string|max:30',
+			//'nama_tanggal_awal' => 'required|string|max:30',
+			'nama_tanggal_akhir' => 'required|string|max:30',
 			'extend' => 'nullable|boolean',
 		], [
 			'nama.required' => 'Nama jenis barang harus diisi.',
 			'nama.string' => 'Nama jenis barang harus berupa teks.',
 			'nama.max' => 'Nama jenis barang tidak boleh lebih dari 30 karakter.',
-			'nama_tanggal_awal.string' => 'Nama tanggal awal harus berupa teks.',
-			'nama_tanggal_awal.max' => 'Nama tanggal awal tidak boleh lebih dari 30 karakter.',
+			//'nama_tanggal_awal.string' => 'Nama tanggal awal harus berupa teks.',
+			//'nama_tanggal_awal.max' => 'Nama tanggal awal tidak boleh lebih dari 30 karakter.',
+			'nama_tanggal_akhir.required' => 'Nama tanggal akhir harus diisi.',
 			'nama_tanggal_akhir.string' => 'Nama tanggal akhir harus berupa teks.',
 			'nama_tanggal_akhir.max' => 'Nama tanggal akhir tidak boleh lebih dari 30 karakter.',
 			'extend.boolean' => 'Extend harus berupa nilai boolean (false/true).',
@@ -85,7 +87,7 @@ class KeperluanController extends Controller
 		$data = Keperluan::find($id);
 
 		$data->nama = $request->nama;
-		$data->nama_tanggal_awal = $request->nama_tanggal_awal;
+		//$data->nama_tanggal_awal = $request->nama_tanggal_awal;
 		$data->nama_tanggal_akhir = $request->nama_tanggal_akhir;
 		$data->extend = $request->extend ?? 0;
 		$data->save();

@@ -27,10 +27,12 @@ class PermintaanBarangKeluarController extends Controller
 				'keperluan.nama as nama_keperluan',
 				'permintaan_barang_keluar.id as permintaan_barang_keluar_id',
                 'permintaan_barang_keluar.jumlah',
-				'keperluan.extend as extend'
+				'keperluan.extend as extend',
+				DB::raw("REPLACE(keperluan.nama_tanggal_awal, 'Tanggal ', '') as nama_tanggal_awal"),
+				DB::raw("REPLACE(keperluan.nama_tanggal_akhir, 'Tanggal ', '') as nama_tanggal_akhir")
 			)
-			->selectRaw("DATE_FORMAT(permintaan_barang_keluar.tanggal_awal, '%d %M %Y') as tanggal_awal")
-			->selectRaw("DATE_FORMAT(permintaan_barang_keluar.tanggal_akhir, '%d %M %Y') as tanggal_akhir")
+			->selectRaw("TO_CHAR(permintaan_barang_keluar.tanggal_awal, 'DD Mon YYYY') as tanggal_awal")
+			->selectRaw("TO_CHAR(permintaan_barang_keluar.tanggal_akhir, 'DD Mon YYYY') as tanggal_akhir")
 			->when($search, function ($query) use ($search) {
 				return $query->where('customer.nama', 'like', '%' . $search . '%')
 					->orWhere('keperluan.nama', 'like', '%' . $search . '%')
