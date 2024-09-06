@@ -10,19 +10,14 @@ use App\Models\Barang;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class StatusBarangController extends Controller
 {
 
 	public function index(Request $request)
 	{
-		$search = $request->input('search');
-
-        $data = StatusBarang::when($search, function ($query) use ($search) {
-            return $query->where('nama', 'like', '%' . $search . '%');
-        })->paginate(7);
-
-        return view('statusbarang.index', compact('data'));
+        return view('statusbarang.index');
 	}
 
 	public function create()
@@ -32,91 +27,59 @@ class StatusBarangController extends Controller
 
 	public function store(Request $request): RedirectResponse
 	{
-		$request->validate([
-			'nama' => 'required|string|max:255',
-			'warna' => 'required|string|regex:/^#[A-Fa-f0-9]{6}$/',
-		], [
-			'nama.required' => 'Nama jenis barang harus diisi.',
-			'nama.string' => 'Nama jenis barang harus berupa teks.',
-			'nama.max' => 'Nama jenis barang tidak boleh lebih dari 255 karakter.',
-			'warna.required' => 'Warna harus diisi.',
-			'warna.string' => 'Warna harus berupa teks.',
-			'warna.regex' => 'Format warna tidak valid. Gunakan format hex (contoh: #FFFFFF).',
-		]);
+		$response = Http::withToken(session('token'))->post(config('app.api_url') . '/statusbarang', $request->all());
 
-		$data = StatusBarang::create([
-			'nama' => $request->nama,
-			'warna' => $request->warna,
-		]);
+        if ($response->successful()) {
+            return redirect('/statusbarang')->with('success', 'Data berhasil ditambahkan!');
+        }
 
-		return redirect('/statusbarang')->with('success', 'Anda berhasil menambahkan data!');
+        return back()->withErrors('Gagal menambahkan data status barang.');
 	}
 
 	public function edit($id)
 	{
-		$data = StatusBarang::find($id);
-		return view('statusbarang.edit', ['data' => $data]);
+		$response = Http::withToken(session('token'))->get(config('app.api_url') . '/statusbarang/' . $id);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            $data = (object) $data;
+            return view('statusbarang.edit', compact('data'));
+        }
+        return redirect('/statusbarang')->withErrors('Gagal mengambil data status barang.');
 	}
 
 	public function update($id, Request $request): RedirectResponse
 	{
-		$request->validate([
-			'nama' => 'required|string|max:255',
-			'warna' => 'required|string|regex:/^#[A-Fa-f0-9]{6}$/',
-		], [
-			'nama.required' => 'Nama jenis barang harus diisi.',
-			'nama.string' => 'Nama jenis barang harus berupa teks.',
-			'nama.max' => 'Nama jenis barang tidak boleh lebih dari 255 karakter.',
-			'warna.required' => 'Warna harus diisi.',
-			'warna.string' => 'Warna harus berupa teks.',
-			'warna.regex' => 'Format warna tidak valid. Gunakan format hex (contoh: #FFFFFF).',
-		]);
+		$response = Http::withToken(session('token'))->put(config('app.api_url') . '/statusbarang/' . $id, $request->all());
 
-		$data = StatusBarang::find($id);
+        if ($response->successful()) {
+            return redirect('/statusbarang')->with('success', 'Data berhasil diperbarui!');
+        }
 
-		$data->nama = $request->nama;
-		$data->warna = $request->warna;
-		$data->save();
-
-		return redirect('/statusbarang')->with('success', 'Anda berhasil memperbarui data!');
+        return back()->withErrors('Gagal memperbarui data status barang.');
 	}
 
 	public function delete($id)
 	{
-		$statusBarang = StatusBarang::find($id);
-		$barangMasuk = BarangMasuk::where('status_barang_id', $id)->get();
+		$response = Http::withToken(session('token'))->delete(config('app.api_url') . '/statusbarang/' . $id);
 
-		foreach ($barangMasuk as $item) {
-			$barang = Barang::find($item->barang_id);
-			if ($barang) {
-				$barang->jumlah -= $item->jumlah;
-				$barang->save();
-			}
-			$item->delete();
-		}
+        if ($response->successful()) {
+            return redirect('/statusbarang')->with('success', 'Data berhasil dihapus!');
+        }
 
-		$statusBarang->delete();
-		return redirect('/statusbarang')->with('success', 'Anda berhasil menghapus data!');
+        return back()->withErrors('Gagal menghapus data status barang.');
 	}
 
 	public function deleteSelected(Request $request)
 	{
-		$ids = $request->input('ids');
-		foreach ($ids as $id) {
-			$statusBarang = StatusBarang::find($id);
-			$barangMasuk = BarangMasuk::where('status_barang_id', $id)->get();
+		$response = Http::withToken(session('token'))->post(config('app.api_url') . '/statusbarang/delete-selected', [
+            'ids' => $request->input('ids')
+        ]);
 
-			foreach ($barangMasuk as $item) {
-				$barang = Barang::find($item->barang_id);
-				if ($barang) {
-					$barang->jumlah -= $item->jumlah;
-					$barang->save();
-				}
-				$item->delete();
-			}
+        if ($response->successful()) {
+            return redirect('/statusbarang')->with('success', 'Data terpilih berhasil dihapus!');
+        }
 
-			$statusBarang->delete();
-		}
-		return response()->json(['success' => 'Data berhasil dihapus']);
+        return back()->withErrors('Gagal menghapus data status barang terpilih.');
 	}
 }

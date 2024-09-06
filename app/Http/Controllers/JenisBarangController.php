@@ -8,19 +8,14 @@ use App\Models\JenisBarang;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class JenisBarangController extends Controller
 {
 
 	public function index(Request $request)
 	{
-		$search = $request->input('search');
-
-        $data = JenisBarang::when($search, function ($query) use ($search) {
-            return $query->where('nama', 'like', '%' . $search . '%');
-        })->paginate(7);
-
-        return view('jenisbarang.index', compact('data'));
+        return view('jenisbarang.index');
 	}
 
 	public function create()
@@ -30,62 +25,59 @@ class JenisBarangController extends Controller
 
 	public function store(Request $request): RedirectResponse
 	{
-		$request->validate([
-			'nama' => 'required|string|max:255',
-		], [
-			'nama.required' => 'Nama jenis barang harus diisi.',
-			'nama.string' => 'Nama jenis barang harus berupa teks.',
-			'nama.max' => 'Nama jenis barang tidak boleh lebih dari 255 karakter.',
-		]);
-		
-		$data = JenisBarang::create([
-			'nama' => $request->nama,
-		]);
+		$response = Http::withToken(session('token'))->post(config('app.api_url') . '/jenisbarang', $request->all());
 
-		return redirect('/jenisbarang')->with('success', 'Anda berhasil menambahkan data!');
+        if ($response->successful()) {
+            return redirect('/jenisbarang')->with('success', 'Data berhasil ditambahkan!');
+        }
+
+        return back()->withErrors('Gagal menambahkan data jenis barang.');
 	}
 
 	public function edit($id)
 	{
-		$data = JenisBarang::find($id);
-		return view('jenisbarang.edit', ['data' => $data]);
+		$response = Http::withToken(session('token'))->get(config('app.api_url') . '/jenisbarang/' . $id);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            $data = (object) $data;
+            return view('jenisbarang.edit', compact('data'));
+        }
+        return redirect('/jenisbarang')->withErrors('Gagal mengambil data jenis barang.');
 	}
 
 	public function update($id, Request $request): RedirectResponse
 	{
-		$request->validate([
-			'nama' => 'required|string|max:255',
-		], [
-			'nama.required' => 'Nama jenis barang harus diisi.',
-			'nama.string' => 'Nama jenis barang harus berupa teks.',
-			'nama.max' => 'Nama jenis barang tidak boleh lebih dari 255 karakter.',
-		]);
+		$response = Http::withToken(session('token'))->put(config('app.api_url') . '/jenisbarang/' . $id, $request->all());
 
-		$data = JenisBarang::find($id);
+        if ($response->successful()) {
+            return redirect('/jenisbarang')->with('success', 'Data berhasil diperbarui!');
+        }
 
-		$data->nama = $request->nama;
-		$data->save();
-
-		return redirect('/jenisbarang')->with('success', 'Anda berhasil memperbarui data!');
+        return back()->withErrors('Gagal memperbarui data jenis barang.');
 	}
 
 	public function delete($id)
 	{
-		$data = JenisBarang::find($id);
+		$response = Http::withToken(session('token'))->delete(config('app.api_url') . '/jenisbarang/' . $id);
 
-		$data->delete();
-		return redirect('/jenisbarang')->with('success', 'Anda berhasil menghapus data!');
+        if ($response->successful()) {
+            return redirect('/jenisbarang')->with('success', 'Data berhasil dihapus!');
+        }
+
+        return back()->withErrors('Gagal menghapus data jenis barang.');
 	}
 
 	public function deleteSelected(Request $request)
 	{
-		$ids = $request->input('ids');
-		foreach ($ids as $id) {
-			$data = JenisBarang::find($id);
-			if ($data) {
-				$data->delete();
-			}
-		}
-		return redirect('/jenisbarang')->with('success', 'Anda berhasil menghapus data terpilih!');
+		$response = Http::withToken(session('token'))->post(config('app.api_url') . '/jenisbarang/delete-selected', [
+            'ids' => $request->input('ids')
+        ]);
+
+        if ($response->successful()) {
+            return redirect('/jenisbarang')->with('success', 'Data terpilih berhasil dihapus!');
+        }
+
+        return back()->withErrors('Gagal menghapus data jenis barang terpilih.');
 	}
 }
