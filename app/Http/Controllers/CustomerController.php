@@ -10,22 +10,14 @@ use App\Models\BarangMasuk;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class CustomerController extends Controller
 {
 
 	public function index(Request $request)
 	{
-		$search = $request->input('search');
-
-        $data = Customer::when($search, function ($query) use ($search) {
-            return $query->where('nama', 'like', '%' . $search . '%')
-			->orWhere('alamat', 'like', '%' . $search . '%')
-			->orWhere('telepon', 'like', '%' . $search . '%')
-			->orWhere('keterangan', 'like', '%' . $search . '%');
-        })->orderBy('nama', 'asc')->paginate(7);	
-					
-        return view('customer.index', compact('data'));
+		return view('customer.index');
 	}
 
 	public function create()
@@ -33,119 +25,61 @@ class CustomerController extends Controller
 		return view('customer.create');
 	}
 
-	public function store(Request $request): RedirectResponse
+	public function store(Request $request)
 	{
-		$request->validate([
-			'nama' => 'required|string|max:255',
-			'alamat' => 'required|string|max:255',
-			'telepon' => 'required|numeric|digits_between:10,15',
-			'keterangan' => 'nullable|string|max:255',
-		], [
-			'nama.required' => 'Nama harus diisi.',
-			'nama.string' => 'Nama harus berupa teks.',
-			'nama.max' => 'Nama tidak boleh lebih dari 255 karakter.',
-			'alamat.required' => 'Alamat harus diisi.',
-			'alamat.string' => 'Alamat harus berupa teks.',
-			'alamat.max' => 'Alamat tidak boleh lebih dari 255 karakter.',
-			'telepon.required' => 'Nomor telepon harus diisi.',
-			'telepon.numeric' => 'Nomor telepon harus berupa angka.',
-			'telepon.digits_between' => 'Nomor telepon harus memiliki panjang antara 10 sampai 15 digit.',
-			'keterangan.string' => 'Keterangan harus berupa teks.',
-			'keterangan.max' => 'Keterangan tidak boleh lebih dari 255 karakter.',
-		]);
+		$response = Http::withToken(session('token'))->post(config('app.api_url') . '/customers', $request->all());
 
-		//$userId = Auth::id();
+        if ($response->successful()) {
+            return redirect('/customer')->with('success', 'Data berhasil ditambahkan!');
+        }
 
-		$data = Customer::create([
-			'nama' => $request->nama,
-			'alamat' => $request->alamat,
-			'telepon' => $request->telepon,
-			'keterangan' => $request->keterangan,
-			'created_by' => Auth::id(),
-		]);
-
-		return redirect('/customer')->with('success', 'Anda berhasil menambahkan data!');
+        return back()->withErrors('Gagal menambahkan data customer.');
 	}
 
 	public function edit($id)
 	{
-		$data = Customer::find($id);
-		return view('customer.edit', ['data' => $data]);
+		$response = Http::withToken(session('token'))->get(config('app.api_url') . '/customers/' . $id);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            return view('customer.edit', compact('data'));
+        }
+
+        return redirect('/customer')->withErrors('Gagal mengambil data customer.');
 	}
 
-	public function update($id, Request $request): RedirectResponse
+	public function update($id, Request $request)
 	{
-		$request->validate([
-			'nama' => 'required|string|max:255',
-			'alamat' => 'required|string|max:255',
-			'telepon' => 'required|numeric|digits_between:10,15',
-			'keterangan' => 'nullable|string|max:255',
-		], [
-			'nama.required' => 'Nama harus diisi.',
-			'nama.string' => 'Nama harus berupa teks.',
-			'nama.max' => 'Nama tidak boleh lebih dari 255 karakter.',
-			'alamat.required' => 'Alamat harus diisi.',
-			'alamat.string' => 'Alamat harus berupa teks.',
-			'alamat.max' => 'Alamat tidak boleh lebih dari 255 karakter.',
-			'telepon.required' => 'Nomor telepon harus diisi.',
-			'telepon.numeric' => 'Nomor telepon harus berupa angka.',
-			'telepon.digits_between' => 'Nomor telepon harus memiliki panjang antara 10 sampai 15 digit.',
-			'keterangan.string' => 'Keterangan harus berupa teks.',
-			'keterangan.max' => 'Keterangan tidak boleh lebih dari 255 karakter.',
-		]);
+		$response = Http::withToken(session('token'))->put(config('app.api_url') . '/customers/' . $id, $request->all());
 
-		$data = Customer::find($id);
+        if ($response->successful()) {
+            return redirect('/customer')->with('success', 'Data berhasil diperbarui!');
+        }
 
-		$data->nama = $request->nama;
-		$data->alamat = $request->alamat;
-		$data->telepon = $request->telepon;
-		$data->keterangan = $request->keterangan;
-		$data->updated_by = Auth::id();
-		$data->save();
-
-		return redirect('/customer')->with('success', 'Anda berhasil memperbarui data!');
+        return back()->withErrors('Gagal memperbarui data customer.');
 	}
 
 	public function delete($id)
 	{
-		$customer = Customer::find($id);
+		$response = Http::withToken(session('token'))->delete(config('app.api_url') . '/customers/' . $id);
 
-		/*$barangMasuk = BarangMasuk::where('customer_id', $id)->get();
+        if ($response->successful()) {
+            return redirect('/customer')->with('success', 'Data berhasil dihapus!');
+        }
 
-		foreach ($barangMasuk as $item) {
-			$barang = Barang::find($item->barang_id);
-			if ($barang) {
-				$barang->jumlah -= $item->jumlah;
-				$barang->save();
-			}
-			$item->delete();
-		}*/
-
-		$customer->delete();
-		return redirect('/customer')->with('success', 'Anda berhasil menghapus data!');
+        return back()->withErrors('Gagal menghapus data customer.');
 	}
 
 	public function deleteSelected(Request $request)
 	{
-		$ids = $request->input('ids');
-		foreach ($ids as $id) {
-			$customer = Customer::find($id);
+		$response = Http::withToken(session('token'))->post(config('app.api_url') . '/customers/delete-selected', [
+            'ids' => $request->input('ids')
+        ]);
 
-			if ($customer) {
-				/*$barangMasuk = BarangMasuk::where('customer_id', $id)->get();
+        if ($response->successful()) {
+            return redirect('/customer')->with('success', 'Data terpilih berhasil dihapus!');
+        }
 
-				foreach ($barangMasuk as $item) {
-					$barang = Barang::find($item->barang_id);
-					if ($barang) {
-						$barang->jumlah -= $item->jumlah;
-						$barang->save();
-					}
-					$item->delete();
-				}*/
-
-				$customer->delete();
-			}
-		}
-		return redirect('/customer')->with('success', 'Anda berhasil menghapus data terpilih!');
+        return back()->withErrors('Gagal menghapus data customer terpilih.');
 	}
 }

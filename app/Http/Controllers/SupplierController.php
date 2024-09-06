@@ -10,22 +10,14 @@ use App\Models\BarangMasuk;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class SupplierController extends Controller
 {
 
 	public function index(Request $request)
 	{
-		$search = $request->input('search');
-
-        $data = Supplier::when($search, function ($query) use ($search) {
-            return $query->where('nama', 'like', '%' . $search . '%')
-			->orWhere('alamat', 'like', '%' . $search . '%')
-			->orWhere('telepon', 'like', '%' . $search . '%')
-			->orWhere('keterangan', 'like', '%' . $search . '%');
-        })->orderBy('nama', 'asc')->paginate(7);	
-					
-        return view('supplier.index', compact('data'));
+		return view('supplier.index');
 	}
 
 	public function create()
@@ -33,109 +25,61 @@ class SupplierController extends Controller
 		return view('supplier.create');
 	}
 
-	public function store(Request $request): RedirectResponse
-	{
-		$request->validate([
-			'nama' => 'required|string|max:255',
-			'alamat' => 'required|string|max:255',
-			'telepon' => 'required|numeric|digits_between:10,15',
-			'keterangan' => 'nullable|string|max:255',
-		], [
-			'nama.required' => 'Nama harus diisi.',
-			'nama.string' => 'Nama harus berupa teks.',
-			'nama.max' => 'Nama tidak boleh lebih dari 255 karakter.',
-			'alamat.required' => 'Alamat harus diisi.',
-			'alamat.string' => 'Alamat harus berupa teks.',
-			'alamat.max' => 'Alamat tidak boleh lebih dari 255 karakter.',
-			'telepon.required' => 'Nomor telepon harus diisi.',
-			'telepon.numeric' => 'Nomor telepon harus berupa angka.',
-			'telepon.digits_between' => 'Nomor telepon harus memiliki panjang antara 10 sampai 15 digit.',
-			'keterangan.string' => 'Keterangan harus berupa teks.',
-			'keterangan.max' => 'Keterangan tidak boleh lebih dari 255 karakter.',
-		]);
+    public function store(Request $request)
+    {
+        $response = Http::withToken(session('token'))->post(config('app.api_url') . '/suppliers', $request->all());
 
-		//$userId = Auth::id();
+        if ($response->successful()) {
+            return redirect('/supplier')->with('success', 'Data berhasil ditambahkan!');
+        }
 
-		$data = Supplier::create([
-			'nama' => $request->nama,
-			'alamat' => $request->alamat,
-			'telepon' => $request->telepon,
-			'keterangan' => $request->keterangan,
-			'created_by' => Auth::id(),
-		]);
+        return back()->withErrors('Gagal menambahkan data supplier.');
+    }
 
-		return redirect('/supplier')->with('success', 'Anda berhasil menambahkan data!');
-	}
+    public function edit($id)
+    {
+        $response = Http::withToken(session('token'))->get(config('app.api_url') . '/suppliers/' . $id);
 
-	public function edit($id)
-	{
-		$data = Supplier::find($id);
-		return view('supplier.edit', ['data' => $data]);
-	}
+        if ($response->successful()) {
+            $data = $response->json();
+            return view('supplier.edit', compact('data'));
+        }
 
-	public function update($id, Request $request): RedirectResponse
-	{
-		$request->validate([
-			'nama' => 'required|string|max:255',
-			'alamat' => 'required|string|max:255',
-			'telepon' => 'required|numeric|digits_between:10,15',
-			'keterangan' => 'nullable|string|max:255',
-		], [
-			'nama.required' => 'Nama harus diisi.',
-			'nama.string' => 'Nama harus berupa teks.',
-			'nama.max' => 'Nama tidak boleh lebih dari 255 karakter.',
-			'alamat.required' => 'Alamat harus diisi.',
-			'alamat.string' => 'Alamat harus berupa teks.',
-			'alamat.max' => 'Alamat tidak boleh lebih dari 255 karakter.',
-			'telepon.required' => 'Nomor telepon harus diisi.',
-			'telepon.numeric' => 'Nomor telepon harus berupa angka.',
-			'telepon.digits_between' => 'Nomor telepon harus memiliki panjang antara 10 sampai 15 digit.',
-			'keterangan.string' => 'Keterangan harus berupa teks.',
-			'keterangan.max' => 'Keterangan tidak boleh lebih dari 255 karakter.',
-		]);
+        return redirect('/supplier')->withErrors('Gagal mengambil data supplier.');
+    }
 
-		$data = Supplier::find($id);
+    public function update($id, Request $request)
+    {
+        $response = Http::withToken(session('token'))->put(config('app.api_url') . '/suppliers/' . $id, $request->all());
 
-		$data->nama = $request->nama;
-		$data->alamat = $request->alamat;
-		$data->telepon = $request->telepon;
-		$data->keterangan = $request->keterangan;
-		$data->updated_by = Auth::id();
-		$data->save();
+        if ($response->successful()) {
+            return redirect('/supplier')->with('success', 'Data berhasil diperbarui!');
+        }
 
-		return redirect('/supplier')->with('success', 'Anda berhasil memperbarui data!');
-	}
+        return back()->withErrors('Gagal memperbarui data supplier.');
+    }
 
-	public function delete($id)
-	{
-		$supplier = Supplier::find($id);
+    public function delete($id)
+    {
+        $response = Http::withToken(session('token'))->delete(config('app.api_url') . '/suppliers/' . $id);
 
-		$barang = Barang::where('supplier_id', $id)->get();
+        if ($response->successful()) {
+            return redirect('/supplier')->with('success', 'Data berhasil dihapus!');
+        }
 
-		foreach ($barang as $item) {
-			$item->delete();
-		}
+        return back()->withErrors('Gagal menghapus data supplier.');
+    }
 
-		$supplier->delete();
-		return redirect('/supplier')->with('success', 'Anda berhasil menghapus data!');
-	}
+    public function deleteSelected(Request $request)
+    {
+        $response = Http::withToken(session('token'))->post(config('app.api_url') . '/suppliers/delete-selected', [
+            'ids' => $request->input('ids')
+        ]);
 
-	public function deleteSelected(Request $request)
-	{
-		$ids = $request->input('ids');
-		foreach ($ids as $id) {
-			$supplier = Supplier::find($id);
+        if ($response->successful()) {
+            return redirect('/supplier')->with('success', 'Data terpilih berhasil dihapus!');
+        }
 
-			if ($supplier) {
-				$barang = Barang::where('supplier_id', $id)->get();
-				
-				foreach ($barang as $item) {
-					$item->delete();
-				}
-
-				$supplier->delete();
-			}
-		}
-		return redirect('/supplier')->with('success', 'Anda berhasil menghapus data terpilih!');
-	}
+        return back()->withErrors('Gagal menghapus data supplier terpilih.');
+    }
 }
