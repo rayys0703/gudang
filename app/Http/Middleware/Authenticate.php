@@ -12,10 +12,18 @@ class Authenticate
 {
     public function handle($request, Closure $next)
     {
-        if (Session::has('token')) {
-            return $next($request);
+        if (Session::has('token') && Session::has('user')) {
+            $response = Http::api()->withToken(Session::get('token'))->get('/me');
+            
+            if ($response->successful()) {
+                return $next($request);
+            }
+            
+            Session::flush();
+            return redirect()->route('showLoginForm')->withErrors('Sesi Anda telah berakhir. Silakan login kembali.');
         }
-
+        
+        Session::flush();
         return redirect()->route('showLoginForm')->withErrors('Anda harus login terlebih dahulu.');
     }
 }

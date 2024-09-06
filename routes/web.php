@@ -18,11 +18,10 @@ use App\Http\Controllers\SerialNumberController;
 use App\Http\Controllers\PengaturanTanggalPBK;
 use Illuminate\Support\Facades\Route;
 
-//Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
-
+/* Perlu Login */
 Route::middleware('auth')->group(function () {
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-
+    
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -117,23 +116,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporan/barangmasuk', [LaporanController::class, 'barangmasuk'])->name('laporan.barangmasuk.index');
     Route::get('/laporan/barangkeluar', [LaporanController::class, 'barangkeluar'])->name('laporan.barangkeluar.index');
 });
-//Auth::routes();
 
-// Route::get('/login', [LoginController::class, 'showLoginForm'])->name('showLoginForm');
-// Route::post('/login', [LoginController::class, 'login'])->name('login');
-
-
-// Tampilan form registrasi
-// Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register.form');
-// Route::post('register', [RegisterController::class, 'register'])->name('register');
-
+/* Tidak perlu login */
 Route::middleware('guest')->group(function () {
+    /* Tampilan awal */
     Route::get('/', function () {return view('welcome');});
 
     /* Autentikasi */
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('showLoginForm');
     Route::post('/login', [LoginController::class, 'login'])->name('login');
+    Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register.form');
+    Route::post('register', [RegisterController::class, 'register'])->name('register');
 });
-
-Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register.form');
-Route::post('register', [RegisterController::class, 'register'])->name('register');

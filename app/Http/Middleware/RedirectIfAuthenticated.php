@@ -20,10 +20,9 @@ class RedirectIfAuthenticated
     public function handle(Request $request, Closure $next, ...$guards)
     {
         // Jika sudah login
-        if (Session::has('token')) {
-            return redirect()->back();
+        if (Session::has('token') && Session::has('user')) {
+            return redirect()->to(url()->previous() !== url()->current() ? url()->previous() : '/dashboard');
         }
-
         return $next($request);
     }
 }
