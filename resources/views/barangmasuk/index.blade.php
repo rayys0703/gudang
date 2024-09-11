@@ -127,7 +127,8 @@
                     }
                 },
                 columns: [{
-                        data: 'id',
+                        data: 'barang_masuk_id',
+                        name: 'barang_masuk.id',
                         orderable: false,
                         render: function(data, type, row) {
                             return `<input type="checkbox" class="select-item flex justify-center items-center" value="${data}">`;
@@ -162,7 +163,8 @@
                         defaultContent: '-'
                     },
                     {
-                        data: 'id',
+                        data: 'barang_masuk_id',
+                        name: 'barang_masuk.id',
                         orderable: false,
                         render: function(data, type, row) {
                             return `
@@ -196,6 +198,9 @@
                         }
                     }
                 ],
+                order: [
+                    [5, 'desc']
+                ]
             });
         });
     </script>
