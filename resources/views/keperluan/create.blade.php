@@ -38,7 +38,7 @@
                         document.getElementById('extend').addEventListener('change', function() {
                             this.value = this.checked ? '1' : '0';
                             document.getElementById('tanggalInputs').style.display = this.checked ? 'block' : 'none';
-                            document.getElementById('nama_tanggal_awal').required = this.checked;
+                            // document.getElementById('nama_tanggal_awal').required = this.checked;
                             document.getElementById('nama_tanggal_akhir').required = this.checked;
                         });
                     </script>
@@ -65,7 +65,7 @@
                                 <label for="nama_tanggal_akhir" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Tanggal Akhir</label>
                                 <input type="text" id="nama_tanggal_akhir" name="nama_tanggal_akhir"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="Tanggal Pengembalian" />
+                                    placeholder="Tanggal Pengembalian" value="Tanggal Pengembalian" />
                             </div>
                             <div class="relative z-0 w-full mb-5 group">
                                 <label for="tanggal_awal" class="block opacity-0 mb-2 text-sm font-medium text-gray-900">Tanggal Permintaan</label>
